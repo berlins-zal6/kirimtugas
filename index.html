@@ -1,85 +1,72 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deadline Tugas</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      body {
-        background-color: #09090b;
-        color: #f4f4f5;
-        font-family: "Inter", sans-serif;
-      }
-      .glass {
-        background: rgba(23, 23, 23, 0.7);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(63, 63, 70, 0.4);
-      }
+        body { 
+            background-color: #f8fafc; /* Warna dasar slate terang */
+            color: #1e293b; /* Teks gelap */
+            font-family: 'Inter', sans-serif; 
+        }
+        .glass { 
+            background: rgba(255, 255, 255, 0.8); /* Putih transparan */
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(226, 232, 240, 0.8); /* Border halus */
+        }
     </style>
-  </head>
-  <body class="min-h-screen flex items-center justify-center p-6">
-    <div class="w-full max-w-lg glass rounded-3xl p-8 shadow-2xl text-center">
-      <div id="display-area">
-        <span
-          class="px-4 py-1 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-xs font-bold rounded-full uppercase tracking-widest"
-          >Informasi Deadline</span
-        >
+</head>
+<body class="min-h-screen flex items-center justify-center p-6 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-50 via-slate-50 to-indigo-50">
 
-        <!-- Bagian ini yang diedit manual jika ada tugas baru -->
-        <h1 id="nama-tugas" class="text-3xl font-black text-white mt-6 mb-2">
-          Tugas Struktur Data
-        </h1>
-        <p id="tgl-deadline" class="text-zinc-400 text-sm mb-8 italic">
-          Memuat data...
-        </p>
+    <div class="w-full max-w-lg glass rounded-3xl p-8 shadow-2xl shadow-blue-100/50 text-center">
+        <div id="display-area">
+            <span class="px-4 py-1 bg-indigo-100 text-indigo-600 border border-indigo-200 text-xs font-bold rounded-full uppercase tracking-widest">Informasi Deadline</span>
+            
+            <!-- Nama Tugas -->
+            <h1 id="nama-tugas" class="text-3xl font-black text-slate-800 mt-6 mb-2 tracking-tight">
+                Tugas Struktur Data
+            </h1>
+            <p id="tgl-deadline" class="text-slate-500 text-sm mb-8 font-medium italic">
+                Memuat data...
+            </p>
 
-        <!-- Countdown -->
-        <div class="grid grid-cols-4 gap-3 mb-10">
-          <div class="bg-zinc-900/50 p-3 rounded-2xl border border-zinc-800">
-            <div id="hari" class="text-3xl font-bold text-white">00</div>
-            <div class="text-[10px] uppercase text-zinc-500 font-bold">
-              Hari
+            <!-- Countdown -->
+            <div class="grid grid-cols-4 gap-3 mb-10">
+                <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
+                    <div id="hari" class="text-3xl font-bold text-slate-800">00</div>
+                    <div class="text-[10px] uppercase text-slate-400 font-bold tracking-tighter">Hari</div>
+                </div>
+                <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
+                    <div id="jam" class="text-3xl font-bold text-slate-800">00</div>
+                    <div class="text-[10px] uppercase text-slate-400 font-bold tracking-tighter">Jam</div>
+                </div>
+                <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
+                    <div id="menit" class="text-3xl font-bold text-slate-800">00</div>
+                    <div class="text-[10px] uppercase text-slate-400 font-bold tracking-tighter">Menit</div>
+                </div>
+                <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
+                    <div id="detik" class="text-3xl font-bold text-indigo-600">00</div>
+                    <div class="text-[10px] uppercase text-slate-400 font-bold tracking-tighter">Detik</div>
+                </div>
             </div>
-          </div>
-          <div class="bg-zinc-900/50 p-3 rounded-2xl border border-zinc-800">
-            <div id="jam" class="text-3xl font-bold text-white">00</div>
-            <div class="text-[10px] uppercase text-zinc-500 font-bold">Jam</div>
-          </div>
-          <div class="bg-zinc-900/50 p-3 rounded-2xl border border-zinc-800">
-            <div id="menit" class="text-3xl font-bold text-white">00</div>
-            <div class="text-[10px] uppercase text-zinc-500 font-bold">
-              Menit
-            </div>
-          </div>
-          <div class="bg-zinc-900/50 p-3 rounded-2xl border border-zinc-800">
-            <div id="detik" class="text-3xl font-bold text-rose-500">00</div>
-            <div class="text-[10px] uppercase text-zinc-500 font-bold">
-              Detik
-            </div>
-          </div>
+
+            <!-- Tombol Kirim -->
+            <a id="btn-drive" href="#" target="_blank" class="block w-full bg-indigo-600 text-white font-bold py-4 rounded-2xl hover:bg-indigo-700 transition duration-300 shadow-lg shadow-indigo-200 transform hover:-translate-y-1 active:scale-95">
+                Kirim Tugas Sekarang
+            </a>
         </div>
-
-        <a
-          id="btn-drive"
-          href="#"
-          target="_blank"
-          class="block w-full bg-white text-black font-bold py-4 rounded-2xl hover:bg-zinc-200 transition duration-300 shadow-xl shadow-white/5"
-        >
-          Kirim Tugas
-        </a>
-      </div>
     </div>
 
     <script>
-      // --- EDIT DATA DI SINI SAJA ---
+      // --- EDIT DATA DI SINI ---
       const DATA_TUGAS = {
         nama: "Tugas 3 Pendidikan Pancasila 1",
-        deadline: "2026-05-31T23:59:00", // Format: YYYY-MM-DDTHH:MM:SS
-        linkDrive:
-          "https://drive.google.com/drive/folders/1k5kww2XLujl1KMspPAPeOHZe-EM671pr?usp=drive_link",
+        deadline: "2026-05-31T23:59:00", 
+        linkDrive: "https://drive.google.com/drive/folders/1k5kww2XLujl1KMspPAPeOHZe-EM671pr?usp=drive_link",
       };
-      // ------------------------------
+      // -------------------------
 
       document.getElementById("nama-tugas").innerText = DATA_TUGAS.nama;
       document.getElementById("btn-drive").href = DATA_TUGAS.linkDrive;
@@ -97,26 +84,19 @@
 
         if (diff <= 0) {
           document.getElementById("display-area").innerHTML =
-            `<h1 class="text-2xl font-bold text-rose-500">WAKTU HABIS!</h1><p class="text-zinc-400 mt-2">Pengiriman tugas sudah ditutup.</p>`;
+            `<h1 class="text-2xl font-bold text-rose-500 uppercase tracking-tight">Waktu Habis!</h1>
+             <p class="text-slate-500 mt-2">Maaf, batas pengiriman tugas sudah lewat.</p>`;
           return;
         }
 
-        document.getElementById("hari").innerText = Math.floor(
-          diff / (1000 * 60 * 60 * 24),
-        );
-        document.getElementById("jam").innerText = Math.floor(
-          (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-        );
-        document.getElementById("menit").innerText = Math.floor(
-          (diff % (1000 * 60 * 60)) / (1000 * 60),
-        );
-        document.getElementById("detik").innerText = Math.floor(
-          (diff % (1000 * 60)) / 1000,
-        );
+        document.getElementById("hari").innerText = Math.floor(diff / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+        document.getElementById("jam").innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+        document.getElementById("menit").innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+        document.getElementById("detik").innerText = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
       }
 
       setInterval(updateTimer, 1000);
       updateTimer();
     </script>
-  </body>
+</body>
 </html>
