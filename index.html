@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Deadline Tugas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        background-color: #09090b;
+        color: #f4f4f5;
+        font-family: "Inter", sans-serif;
+      }
+      .glass {
+        background: rgba(23, 23, 23, 0.7);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(63, 63, 70, 0.4);
+      }
+    </style>
+  </head>
+  <body class="min-h-screen flex items-center justify-center p-6">
+    <div class="w-full max-w-lg glass rounded-3xl p-8 shadow-2xl text-center">
+      <div id="display-area">
+        <span
+          class="px-4 py-1 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-xs font-bold rounded-full uppercase tracking-widest"
+          >Informasi Deadline</span
+        >
+
+        <!-- Bagian ini yang diedit manual jika ada tugas baru -->
+        <h1 id="nama-tugas" class="text-3xl font-black text-white mt-6 mb-2">
+          Tugas Struktur Data
+        </h1>
+        <p id="tgl-deadline" class="text-zinc-400 text-sm mb-8 italic">
+          Memuat data...
+        </p>
+
+        <!-- Countdown -->
+        <div class="grid grid-cols-4 gap-3 mb-10">
+          <div class="bg-zinc-900/50 p-3 rounded-2xl border border-zinc-800">
+            <div id="hari" class="text-3xl font-bold text-white">00</div>
+            <div class="text-[10px] uppercase text-zinc-500 font-bold">
+              Hari
+            </div>
+          </div>
+          <div class="bg-zinc-900/50 p-3 rounded-2xl border border-zinc-800">
+            <div id="jam" class="text-3xl font-bold text-white">00</div>
+            <div class="text-[10px] uppercase text-zinc-500 font-bold">Jam</div>
+          </div>
+          <div class="bg-zinc-900/50 p-3 rounded-2xl border border-zinc-800">
+            <div id="menit" class="text-3xl font-bold text-white">00</div>
+            <div class="text-[10px] uppercase text-zinc-500 font-bold">
+              Menit
+            </div>
+          </div>
+          <div class="bg-zinc-900/50 p-3 rounded-2xl border border-zinc-800">
+            <div id="detik" class="text-3xl font-bold text-rose-500">00</div>
+            <div class="text-[10px] uppercase text-zinc-500 font-bold">
+              Detik
+            </div>
+          </div>
+        </div>
+
+        <a
+          id="btn-drive"
+          href="#"
+          target="_blank"
+          class="block w-full bg-white text-black font-bold py-4 rounded-2xl hover:bg-zinc-200 transition duration-300 shadow-xl shadow-white/5"
+        >
+          Kirim Tugas
+        </a>
+      </div>
+    </div>
+
+    <script>
+      // --- EDIT DATA DI SINI SAJA ---
+      const DATA_TUGAS = {
+        nama: "Tugas 3 Pendidikan Pancasila 1",
+        deadline: "2026-05-31T23:59:00", // Format: YYYY-MM-DDTHH:MM:SS
+        linkDrive:
+          "https://drive.google.com/drive/folders/1k5kww2XLujl1KMspPAPeOHZe-EM671pr?usp=drive_link",
+      };
+      // ------------------------------
+
+      document.getElementById("nama-tugas").innerText = DATA_TUGAS.nama;
+      document.getElementById("btn-drive").href = DATA_TUGAS.linkDrive;
+      document.getElementById("tgl-deadline").innerText =
+        "Batas: " +
+        new Date(DATA_TUGAS.deadline).toLocaleString("id-ID", {
+          dateStyle: "long",
+          timeStyle: "short",
+        });
+
+      function updateTimer() {
+        const now = new Date().getTime();
+        const target = new Date(DATA_TUGAS.deadline).getTime();
+        const diff = target - now;
+
+        if (diff <= 0) {
+          document.getElementById("display-area").innerHTML =
+            `<h1 class="text-2xl font-bold text-rose-500">WAKTU HABIS!</h1><p class="text-zinc-400 mt-2">Pengiriman tugas sudah ditutup.</p>`;
+          return;
+        }
+
+        document.getElementById("hari").innerText = Math.floor(
+          diff / (1000 * 60 * 60 * 24),
+        );
+        document.getElementById("jam").innerText = Math.floor(
+          (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+        );
+        document.getElementById("menit").innerText = Math.floor(
+          (diff % (1000 * 60 * 60)) / (1000 * 60),
+        );
+        document.getElementById("detik").innerText = Math.floor(
+          (diff % (1000 * 60)) / 1000,
+        );
+      }
+
+      setInterval(updateTimer, 1000);
+      updateTimer();
+    </script>
+  </body>
+</html>
