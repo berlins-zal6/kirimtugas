@@ -16,7 +16,6 @@
         backdrop-filter: blur(12px);
         border: 1px solid rgba(226, 232, 240, 0.8);
       }
-      /* Animasi halus untuk angka */
       .count-font {
         font-variant-numeric: tabular-nums;
       }
@@ -47,7 +46,6 @@
           Memuat data...
         </p>
 
-        <!-- Countdown - Mobile Responsive Grid -->
         <div class="grid grid-cols-4 gap-2 sm:gap-3 mb-8">
           <div
             class="bg-white p-2 sm:p-3 rounded-2xl border border-slate-200 shadow-sm"
@@ -111,7 +109,6 @@
           </div>
         </div>
 
-        <!-- Langkah & Ketentuan - Mobile Padding Adjustment -->
         <div
           class="text-left bg-indigo-50/50 border border-indigo-100 rounded-2xl p-4 sm:p-5 mb-8"
         >
@@ -167,7 +164,6 @@
           </ul>
         </div>
 
-        <!-- Tombol Kirim - Touch Friendly -->
         <a
           id="btn-drive"
           href="#"
@@ -204,22 +200,20 @@
         if (diff <= 0) {
           document.getElementById("display-area").innerHTML =
             `<div class="text-center py-10 px-4">
-            <div class="bg-rose-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg class="w-8 h-8 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            </div>
-            <h1 class="text-xl font-black text-rose-500 uppercase tracking-tight">Waktu Habis!</h1>
-            <p class="text-slate-500 mt-2 text-sm font-medium">Batas pengiriman tugas sudah ditutup.</p>
-         </div>`;
+                <div class="bg-rose-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <h1 class="text-xl font-black text-rose-500 uppercase tracking-tight">Waktu Habis!</h1>
+                <p class="text-slate-500 mt-2 text-sm font-medium">Batas pengiriman tugas sudah ditutup.</p>
+             </div>`;
           return;
         }
 
-        // Ambil elemen DOM angka countdown
         const elHari = document.getElementById("hari");
         const elJam = document.getElementById("jam");
         const elMenit = document.getElementById("menit");
         const elDetik = document.getElementById("detik");
 
-        // Hitung waktu mundur untuk ditampilkan
         elHari.innerText = Math.floor(diff / (1000 * 60 * 60 * 24))
           .toString()
           .padStart(2, "0");
@@ -235,25 +229,22 @@
           .toString()
           .padStart(2, "0");
 
-        // --- LOGIKA PERUBAHAN WARNA (URGENSI < 12 JAM) ---
-        const batasUrgensi = 12 * 60 * 60 * 1000; // 12 jam dalam milidetik
+        // --- OPTIMASI LOGIKA PERUBAHAN WARNA (< 12 JAM) ---
+        const batasUrgensi = 12 * 60 * 60 * 1000;
+        const isUrgent = diff < batasUrgensi;
 
-        if (diff < batasUrgensi) {
-          // Jika kurang dari 12 jam, pastikan semua elemen memakai warna merah (rose-500)
-          const elemenAngka = [elHari, elJam, elMenit, elDetik];
-          elemenAngka.forEach((el) => {
-            el.classList.remove("text-slate-800");
-            el.classList.add("text-rose-500");
-          });
-        } else {
-          // Jika masih di atas 12 jam, kembalikan ke warna default (detik tetap merah/indigo sesuai keinginan)
-          elHari.classList.replace("text-rose-500", "text-slate-800");
-          elJam.classList.replace("text-rose-500", "text-slate-800");
-          elMenit.classList.replace("text-rose-500", "text-slate-800");
+        // Atur warna merah untuk semua elemen jika urgent
+        elHari.classList.toggle("text-rose-500", isUrgent);
+        elHari.classList.toggle("text-slate-800", !isUrgent);
 
-          // Khusus detik, jika Mner mau dia tetap indigo di waktu normal:
-          elDetik.classList.replace("text-slate-800", "text-indigo-600");
-        }
+        elJam.classList.toggle("text-rose-500", isUrgent);
+        elJam.classList.toggle("text-slate-800", !isUrgent);
+
+        elMenit.classList.toggle("text-rose-500", isUrgent);
+        elMenit.classList.toggle("text-slate-800", !isUrgent);
+
+        elDetik.classList.toggle("text-rose-500", isUrgent);
+        elDetik.classList.toggle("text-indigo-600", !isUrgent);
       }
 
       setInterval(updateTimer, 1000);
