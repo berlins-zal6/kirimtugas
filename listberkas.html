@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manajemen Berkas PTN</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        background-color: #f8fafc;
+        color: #1e293b;
+        font-family: "Inter", sans-serif;
+      }
+      .glass {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+      }
+      .count-font {
+        font-variant-numeric: tabular-nums;
+      }
+    </style>
+  </head>
+  <body
+    class="min-h-screen p-4 sm:p-6 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-50 via-slate-50 to-indigo-50"
+  >
+    <div class="max-w-4xl mx-auto space-y-6">
+      <div class="text-center py-4">
+        <h1 class="text-3xl font-black text-slate-800 tracking-tight">
+          Pusat Kendali Berkas PTN
+        </h1>
+        <p class="text-slate-500 text-sm mt-1">
+          Pantau, input, dan selesaikan administrasi tepat waktu.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+        <div class="md:col-span-1 glass rounded-3xl p-5 shadow-xl space-y-4">
+          <h2
+            id="form-title"
+            class="font-bold text-slate-800 text-base flex items-center gap-2"
+          >
+            <span class="w-2 h-5 bg-indigo-600 rounded-full"></span>
+            Tambah Group Berkas
+          </h2>
+
+          <input type="hidden" id="edit-index" value="" />
+
+          <div>
+            <label
+              class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1"
+              >Judul Keperluan</label
+            >
+            <input
+              type="text"
+              id="input-judul"
+              placeholder="Contoh: Berkas Registrasi Ulang"
+              class="w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500"
+            />
+          </div>
+
+          <div>
+            <label
+              class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1"
+              >Tanggal & Waktu Batas</label
+            >
+            <input
+              type="datetime-local"
+              id="input-deadline"
+              class="w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500"
+            />
+          </div>
+
+          <div>
+            <label
+              class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1"
+              >Nama-Nama Berkas (Per Baris)</label
+            >
+            <textarea
+              id="input-berkas"
+              rows="5"
+              placeholder="Ijazah Terlegalisir&#10;Kartu UTBK&#10;Kartu Keluarga"
+              class="w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 text-left"
+            ></textarea>
+            <p class="text-[10px] text-slate-400 mt-1">
+              Tekan Enter untuk memisahkan nama berkas.
+            </p>
+          </div>
+
+          <div class="flex gap-2 pt-2">
+            <button
+              onclick="saveGroup()"
+              class="flex-1 bg-indigo-600 text-white font-bold py-2.5 rounded-xl text-sm hover:bg-indigo-700 transition active:scale-[0.98]"
+            >
+              Simpan Data
+            </button>
+            <button
+              id="btn-batal"
+              onclick="resetForm()"
+              class="hidden bg-slate-200 text-slate-700 font-bold px-3 py-2.5 rounded-xl text-sm hover:bg-slate-300 transition"
+            >
+              Batal
+            </button>
+          </div>
+        </div>
+
+        <div class="md:col-span-2 space-y-4" id="container-group"></div>
+      </div>
+    </div>
+
+    <script>
+      // Mengambil data dari localStorage jika ada, kalau kosong buat array baru
+      let databaseBerkas =
+        JSON.parse(localStorage.getItem("db_berkas_ptn")) || [];
+
+      function saveGroup() {
+        const judul = document.getElementById("input-judul").value.trim();
+        const deadline = document.getElementById("input-deadline").value;
+        const berkasRaw = document
+          .getElementById("input-berkas")
+          .value.split("\n");
+        const editIndex = document.getElementById("edit-index").value;
+
+        if (
+          !judul ||
+          !deadline ||
+          document.getElementById("input-berkas").value.trim() === ""
+        ) {
+          alert("Mner, mohon lengkapi semua kolom terlebih dahulu!");
+          return;
+        }
+
+        // Bersihkan baris kosong dan buat objek berkas dengan status centang awal (false)
+        const listBerkas = [];
+        berkasRaw.forEach((item) => {
+          if (item.trim() !== "") {
+            listBerkas.push({ nama: item.trim(), selesai: false });
+          }
+        });
+
+        const dataGroup = { judul, deadline, listBerkas };
+
+        if (editIndex === "") {
+          // Tambah baru
+          databaseBerkas.push(dataGroup);
+        } else {
+          // Update data lama, pertahankan status centang yang sudah ada jika jumlah berkas sama
+          const dataLama = databaseBerkas[editIndex];
+          listBerkas.forEach((berkasBaru, i) => {
+            if (
+              dataLama.listBerkas[i] &&
+              dataLama.listBerkas[i].nama === berkasBaru.nama
+            ) {
+              berkasBaru.selesai = dataLama.listBerkas[i].selesai;
+            }
+          });
+          databaseBerkas[editIndex] = dataGroup;
+        }
+
+        updateStorageAndRender();
+        resetForm();
+      }
+
+      function renderData() {
+        const container = document.getElementById("container-group");
+        container.innerHTML = "";
+
+        if (databaseBerkas.length === 0) {
+          container.innerHTML = `
+                    <div class="glass rounded-3xl p-8 text-center text-slate-400 text-sm">
+                        Belum ada grup administrasi berkas yang dimasukkan.
+                    </div>`;
+          return;
+        }
+
+        databaseBerkas.forEach((group, indexGroup) => {
+          // Pisahkan berkas yang belum selesai dan sudah selesai
+          let berkasBelum = "";
+          let berkasSudah = "";
+
+          group.listBerkas.forEach((berkas, indexBerkas) => {
+            const htmlLi = `
+                        <li class="flex items-center justify-between p-2.5 bg-slate-50 border border-slate-100 rounded-xl transition">
+                            <label class="flex items-center gap-3 cursor-pointer flex-1 min-w-0">
+                                <input type="checkbox" ${berkas.selesai ? "checked" : ""} onclick="toggleCentang(${indexGroup}, ${indexBerkas})" class="w-4 h-4 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500">
+                                <span class="text-xs sm:text-sm font-medium ${berkas.selesai ? "line-through text-slate-400 italic" : "text-slate-700"} break-words pr-2">${berkas.nama}</span>
+                            </label>
+                        </li>`;
+
+            if (berkas.selesai) {
+              berkasSudah += htmlLi;
+            } else {
+              berkasBelum += htmlLi;
+            }
+          });
+
+          const elementHtml = `
+                    <div class="glass rounded-3xl p-5 sm:p-6 shadow-lg border border-white space-y-4">
+                        <div class="flex flex-wrap items-start justify-between gap-2">
+                            <div class="cursor-pointer group flex-1 min-w-0" onclick="editGroup(${indexGroup})">
+                                <h3 class="text-lg font-black text-slate-800 tracking-tight group-hover:text-indigo-600 transition flex items-center gap-1.5 break-words">
+                                    ${group.judul}
+                                    <svg class="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-500 opacity-0 group-hover:opacity-100 transition shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                                </h3>
+                                <p class="text-[11px] text-slate-400 font-medium">Batas: ${new Date(group.deadline).toLocaleString("id-ID", { dateStyle: "long", timeStyle: "short" })}</p>
+                            </div>
+                            <button onclick="deleteGroup(${indexGroup})" class="text-xs font-bold text-rose-500 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 px-2.5 py-1.5 rounded-xl transition shrink-0">
+                                Hapus
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-4 gap-2 text-center bg-white/50 p-2.5 border border-slate-100 rounded-2xl">
+                            <div>
+                                <div id="hari-${indexGroup}" class="text-lg sm:text-xl font-bold text-slate-800 count-font">00</div>
+                                <div class="text-[9px] uppercase text-slate-400 font-bold">Hari</div>
+                            </div>
+                            <div>
+                                <div id="jam-${indexGroup}" class="text-lg sm:text-xl font-bold text-slate-800 count-font">00</div>
+                                <div class="text-[9px] uppercase text-slate-400 font-bold">Jam</div>
+                            </div>
+                            <div>
+                                <div id="menit-${indexGroup}" class="text-lg sm:text-xl font-bold text-slate-800 count-font">00</div>
+                                <div class="text-[9px] uppercase text-slate-400 font-bold">Menit</div>
+                            </div>
+                            <div>
+                                <div id="detik-${indexGroup}" class="text-lg sm:text-xl font-bold text-indigo-600 count-font">00</div>
+                                <div class="text-[9px] uppercase text-slate-400 font-bold">Detik</div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <ul class="space-y-2" id="belum-selesai-${indexGroup}">
+                                ${berkasBelum}
+                            </ul>
+                            
+                            ${berkasSudah !== "" && berkasBelum !== "" ? '<div class="border-t border-slate-200/60 my-2"></div>' : ""}
+                            
+                            <ul class="space-y-2 opacity-75" id="sudah-selesai-${indexGroup}">
+                                ${berkasSudah}
+                            </ul>
+                        </div>
+                    </div>`;
+
+          container.innerHTML += elementHtml;
+        });
+
+        startAllTimers();
+      }
+
+      function toggleCentang(indexGroup, indexBerkas) {
+        databaseBerkas[indexGroup].listBerkas[indexBerkas].selesai =
+          !databaseBerkas[indexGroup].listBerkas[indexBerkas].selesai;
+        updateStorageAndRender();
+      }
+
+      function editGroup(index) {
+        const group = databaseBerkas[index];
+        document.getElementById("input-judul").value = group.judul;
+        document.getElementById("input-deadline").value = group.deadline;
+
+        // Gabungkan array kembali ke teks berbaris untuk textarea
+        const textBerkas = group.listBerkas.map((b) => b.nama).join("\n");
+        document.getElementById("input-berkas").value = textBerkas;
+
+        document.getElementById("edit-index").value = index;
+        document.getElementById("form-title").innerHTML =
+          `<span class="w-2 h-5 bg-amber-500 rounded-full"></span> Edit Group Berkas`;
+        document.getElementById("btn-batal").classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function deleteGroup(index) {
+        if (confirm("Mner, yakin ingin menghapus seluruh grup berkas ini?")) {
+          databaseBerkas.splice(index, 1);
+          updateStorageAndRender();
+          resetForm();
+        }
+      }
+
+      function resetForm() {
+        document.getElementById("input-judul").value = "";
+        document.getElementById("input-deadline").value = "";
+        document.getElementById("input-berkas").value = "";
+        document.getElementById("edit-index").value = "";
+        document.getElementById("form-title").innerHTML =
+          `<span class="w-2 h-5 bg-indigo-600 rounded-full"></span> Tambah Group Berkas`;
+        document.getElementById("btn-batal").classList.add("hidden");
+      }
+
+      function updateStorageAndRender() {
+        localStorage.setItem("db_berkas_ptn", JSON.stringify(databaseBerkas));
+        renderData();
+      }
+
+      // --- SISTEM MULTI COUNTDOWN ---
+      let timerIntervals = [];
+      function startAllTimers() {
+        // Bersihkan semua interval lama agar tidak menumpuk di memori browser
+        timerIntervals.forEach(clearInterval);
+        timerIntervals = [];
+
+        databaseBerkas.forEach((group, indexGroup) => {
+          const elHari = document.getElementById(`hari-${indexGroup}`);
+          const elJam = document.getElementById(`jam-${indexGroup}`);
+          const elMenit = document.getElementById(`menit-${indexGroup}`);
+          const elDetik = document.getElementById(`detik-${indexGroup}`);
+
+          if (!elHari) return;
+
+          function hitung() {
+            const now = new Date().getTime();
+            const target = new Date(group.deadline).getTime();
+            const diff = target - now;
+
+            if (diff <= 0) {
+              elHari.innerText = "00";
+              elJam.innerText = "00";
+              elMenit.innerText = "00";
+              elDetik.innerText = "00";
+              elDetik.className =
+                "text-lg sm:text-xl font-bold text-rose-500 count-font";
+              return;
+            }
+
+            const h = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const j = Math.floor(
+              (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+            );
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const d = Math.floor((diff % (1000 * 60)) / 1000);
+
+            elHari.innerText = h.toString().padStart(2, "0");
+            elJam.innerText = j.toString().padStart(2, "0");
+            elMenit.innerText = m.toString().padStart(2, "0");
+            elDetik.innerText = d.toString().padStart(2, "0");
+
+            // Warna panik/merah jika sisa waktu di bawah 12 jam
+            const isUrgent = diff < 12 * 60 * 60 * 1000;
+            [elHari, elJam, elMenit, elDetik].forEach((el) => {
+              el.className = `text-lg sm:text-xl font-bold ${isUrgent ? "text-rose-500" : el === elDetik ? "text-indigo-600" : "text-slate-800"} count-font`;
+            });
+          }
+
+          hitung();
+          const interval = setInterval(hitung, 1000);
+          timerIntervals.push(interval);
+        });
+      }
+
+      // Tampilan pertama saat halaman dimuat
+      renderData();
+    </script>
+  </body>
+</html>
