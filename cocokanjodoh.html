@@ -1,0 +1,1120 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>CocokkahJodohku</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <style>
+      :root {
+        --bg-primary: #0f0c1b;
+        --bg-secondary: #1d1833;
+        --accent-pink: #ff007f;
+        --accent-cyan: #00f0ff;
+        --text-main: #ffffff;
+        --text-muted: #b3aed2;
+
+        /* Status Colors */
+        --color-rejeki: #2ecc71;
+        --color-seri: #f1c40f;
+        --color-kematian: #e74c3c;
+        --color-anak: #9b59b6;
+        --color-bahagia: #e84393;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Roboto, sans-serif;
+      }
+
+      body {
+        background-color: var(--bg-primary);
+        color: var(--text-main);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 12px;
+        background: radial-gradient(circle at center, #251b4f 0%, #0f0c1b 100%);
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      /* Background scrolling text styles - Modified for Realistic Glowing LED Look */
+      .bg-marquee-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        z-index: 0;
+        pointer-events: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        padding: 4vh 0;
+        opacity: 0.9; /* Tingkat kecerahan LED background */
+      }
+
+      /* Efek Grid Scanline LED Fisik */
+      .bg-marquee-wrapper::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        /* Simulasi pixel sub-grating LED dot matrix */
+        background:
+          linear-gradient(rgba(15, 12, 27, 0) 50%, rgba(0, 0, 0, 0.4) 50%),
+          linear-gradient(
+            90deg,
+            rgba(0, 240, 255, 0.03),
+            rgba(255, 0, 127, 0.03)
+          );
+        background-size:
+          100% 5px,
+          5px 100%;
+        z-index: 2;
+        pointer-events: none;
+      }
+
+      .marquee-row {
+        display: flex;
+        width: max-content;
+        user-select: none;
+        z-index: 1;
+      }
+
+      .marquee-text {
+        font-family: "Impact", "Arial Black", sans-serif;
+        font-size: 5.5rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 8px;
+        white-space: nowrap;
+        padding-right: 80px;
+      }
+
+      /* Baris LED Neon Cyan dengan Cahaya Penuh */
+      .marquee-row.cyan .marquee-text {
+        color: #00f0ff;
+        opacity: 0.22;
+        text-shadow:
+          0 0 5px #00f0ff,
+          0 0 15px rgba(0, 240, 255, 0.8),
+          0 0 30px rgba(0, 240, 255, 0.5),
+          0 0 60px rgba(0, 240, 255, 0.3);
+        animation: scrollLeft 35s linear infinite;
+      }
+
+      /* Baris LED Neon Pink dengan Cahaya Penuh */
+      .marquee-row.pink .marquee-text {
+        color: #ff007f;
+        opacity: 0.18;
+        text-shadow:
+          0 0 5px #ff007f,
+          0 0 15px rgba(255, 0, 127, 0.8),
+          0 0 30px rgba(255, 0, 127, 0.5),
+          0 0 60px rgba(255, 0, 127, 0.3);
+        animation: scrollRight 40s linear infinite;
+      }
+
+      /* Baris LED Tambahan Ungu untuk mengisi space visual */
+      .marquee-row.purple .marquee-text {
+        color: #b500ff;
+        opacity: 0.15;
+        text-shadow:
+          0 0 5px #b500ff,
+          0 0 15px rgba(181, 0, 255, 0.8),
+          0 0 30px rgba(181, 0, 255, 0.5);
+        animation: scrollLeft 48s linear infinite;
+      }
+
+      @keyframes scrollLeft {
+        0% {
+          transform: translateX(0%);
+        }
+        100% {
+          transform: translateX(-50%);
+        }
+      }
+
+      @keyframes scrollRight {
+        0% {
+          transform: translateX(-50%);
+        }
+        100% {
+          transform: translateX(0%);
+        }
+      }
+
+      .container {
+        width: 100%;
+        max-width: 950px;
+        background: rgba(20, 16, 38, 0.82);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 2px solid rgba(255, 0, 127, 0.35);
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow:
+          0 20px 50px rgba(0, 0, 0, 0.6),
+          0 0 45px rgba(0, 240, 255, 0.15),
+          inset 0 0 20px rgba(255, 0, 127, 0.1);
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        position: relative;
+        z-index: 10; /* Berada di depan teks berjalan */
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 15px;
+      }
+
+      .header h1 {
+        font-size: 2.2rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        background: linear-gradient(
+          45deg,
+          var(--accent-pink),
+          var(--accent-cyan)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .header p {
+        color: var(--text-muted);
+        margin-top: 6px;
+        font-size: 1rem;
+      }
+
+      .main-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+
+      @media (max-width: 768px) {
+        .main-layout {
+          grid-template-columns: 1fr;
+          gap: 15px;
+        }
+        .header h1 {
+          font-size: 1.8rem;
+        }
+        .container {
+          padding: 16px;
+          border-radius: 16px;
+        }
+        .marquee-text {
+          font-size: 3.5rem; /* Ukuran lebih kecil menyesuaikan mobile screen */
+        }
+      }
+
+      .input-section {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .input-group label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--accent-cyan);
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .input-wrapper i {
+        position: absolute;
+        left: 14px;
+        font-size: 1.1rem;
+        color: var(--text-muted);
+        transition: color 0.3s;
+      }
+
+      .input-group input {
+        width: 100%;
+        background: rgba(15, 12, 27, 0.8);
+        border: 2px solid rgba(179, 174, 210, 0.2);
+        border-radius: 10px;
+        padding: 14px 14px 14px 40px;
+        color: #fff;
+        font-size: 1.1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+      }
+
+      .input-group input:focus {
+        outline: none;
+        border-color: var(--accent-pink);
+        box-shadow: 0 0 12px rgba(255, 0, 127, 0.2);
+      }
+
+      .input-group input:focus + i {
+        color: var(--accent-pink);
+      }
+
+      .btn-hitung {
+        background: linear-gradient(45deg, var(--accent-pink), #ff0055);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 14px;
+        font-size: 1.1rem;
+        font-weight: 800;
+        cursor: pointer;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+        box-shadow: 0 6px 15px rgba(255, 0, 127, 0.3);
+        margin-top: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .btn-hitung:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(255, 0, 127, 0.5);
+      }
+
+      .btn-hitung:active {
+        transform: translateY(1px);
+      }
+
+      .btn-hitung i {
+        font-size: 1.2rem;
+      }
+
+      .result-section {
+        background: rgba(15, 12, 27, 0.5);
+        border-radius: 14px;
+        padding: 20px;
+        border: 1px solid rgba(179, 174, 210, 0.1);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 380px; /* Menjaga layout tetap stabil tingginya */
+        box-sizing: border-box;
+      }
+
+      /* Toggle Breakdown Button Style */
+      .toggle-breakdown-btn {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(179, 174, 210, 0.2);
+        color: var(--text-muted);
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        align-self: flex-start;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .toggle-breakdown-btn:hover {
+        background: rgba(0, 240, 255, 0.1);
+        border-color: var(--accent-cyan);
+        color: #fff;
+      }
+
+      /* Menyetel area detail agar stabil dan ber-scroll jika isinya panjang */
+      #breakdownArea {
+        display: none; /* Hidden by default */
+        max-height: 180px;
+        overflow-y: auto;
+        margin-bottom: 10px;
+        padding-right: 4px;
+      }
+
+      .name-total {
+        background: rgba(29, 24, 51, 0.6);
+        padding: 10px 12px;
+        border-radius: 8px;
+        border-left: 3px solid var(--accent-cyan);
+        font-family: monospace;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem;
+        word-break: break-all;
+      }
+
+      .grand-total-box {
+        text-align: center;
+        margin: 10px 0;
+        padding: 12px;
+        background: rgba(0, 240, 255, 0.05);
+        border: 1px dashed var(--accent-cyan);
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+      }
+
+      .grand-total-box span {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--accent-cyan);
+        display: block;
+        text-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
+      }
+
+      .options-container {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 6px;
+        margin-top: auto;
+        width: 100%;
+      }
+
+      .option-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 2px solid rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        padding: 10px 2px;
+        text-align: center;
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        transition: all 0.1s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        min-width: 0;
+        word-break: break-all;
+      }
+
+      .option-card i {
+        font-size: 0.85rem;
+        opacity: 0.5;
+        transition: opacity 0.1s ease;
+      }
+
+      /* Highlight classes */
+      .option-card.active-rejeki {
+        background: var(--color-rejeki);
+        color: #000;
+        border-color: #fff;
+        box-shadow: 0 0 10px var(--color-rejeki);
+        transform: scale(1.05);
+      }
+      .option-card.active-rejeki i {
+        opacity: 1;
+      }
+
+      .option-card.active-seri {
+        background: var(--color-seri);
+        color: #000;
+        border-color: #fff;
+        box-shadow: 0 0 10px var(--color-seri);
+        transform: scale(1.05);
+      }
+      .option-card.active-seri i {
+        opacity: 1;
+      }
+
+      .option-card.active-kematian {
+        background: var(--color-kematian);
+        color: #fff;
+        border-color: #fff;
+        box-shadow: 0 0 10px var(--color-kematian);
+        transform: scale(1.05);
+      }
+      .option-card.active-kematian i {
+        opacity: 1;
+      }
+
+      .option-card.active-anak {
+        background: var(--color-anak);
+        color: #fff;
+        border-color: #fff;
+        box-shadow: 0 0 10px var(--color-anak);
+        transform: scale(1.05);
+      }
+      .option-card.active-anak i {
+        opacity: 1;
+      }
+
+      .option-card.active-bahagia {
+        background: var(--color-bahagia);
+        color: #fff;
+        border-color: #fff;
+        box-shadow: 0 0 10px var(--color-bahagia);
+        transform: scale(1.05);
+      }
+      .option-card.active-bahagia i {
+        opacity: 1;
+      }
+
+      .final-result-banner {
+        text-align: center;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        min-height: 80px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .final-name {
+        font-size: 1.8rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        animation: pulse 1s infinite alternate;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .final-desc {
+        font-size: 0.9rem;
+        color: #fff;
+        margin-top: 5px;
+        font-weight: 500;
+        text-align: center;
+        padding: 0 5px;
+      }
+
+      .history-section {
+        margin-top: 15px;
+        background: rgba(15, 12, 27, 0.4);
+        border: 1px solid rgba(255, 0, 127, 0.15);
+        border-radius: 12px;
+        padding: 15px;
+      }
+
+      .history-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--accent-cyan);
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(179, 174, 210, 0.1);
+        padding-bottom: 6px;
+        text-transform: uppercase;
+      }
+
+      .history-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: 180px;
+        overflow-y: auto;
+        padding-right: 4px;
+      }
+
+      .btn-reset-history {
+        background: rgba(231, 76, 60, 0.15);
+        border: 1px solid rgba(231, 76, 60, 0.4);
+        color: #ff4d4d;
+        border-radius: 6px;
+        padding: 4px 10px;
+        font-size: 0.75rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        text-transform: uppercase;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .btn-reset-history:hover {
+        background: rgba(231, 76, 60, 0.3);
+        border-color: #ff4d4d;
+        box-shadow: 0 0 10px rgba(231, 76, 60, 0.2);
+      }
+
+      /* Custom Scrollbar for history & breakdown */
+      .history-list::-webkit-scrollbar,
+      #breakdownArea::-webkit-scrollbar {
+        width: 4px;
+      }
+      .history-list::-webkit-scrollbar-track,
+      #breakdownArea::-webkit-scrollbar-track {
+        background: rgba(15, 12, 27, 0.5);
+        border-radius: 10px;
+      }
+      .history-list::-webkit-scrollbar-thumb,
+      #breakdownArea::-webkit-scrollbar-thumb {
+        background: var(--accent-pink);
+        border-radius: 10px;
+      }
+
+      .history-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(29, 24, 51, 0.5);
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        border-left: 4px solid transparent;
+        animation: slideDown 0.3s ease-out;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes pulse {
+        from {
+          transform: scale(1);
+        }
+        to {
+          transform: scale(1.03);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Background Moving Text Wrapper -->
+    <div class="bg-marquee-wrapper">
+      <div class="marquee-row cyan">
+        <div class="marquee-text">
+          Selamat datang di live saya, cek aja namamu dan pacarmu sekarang 🔮
+          Selamat datang di live saya, cek aja namamu dan pacarmu sekarang 🔮
+        </div>
+        <div class="marquee-text">
+          Selamat datang di live saya, cek aja namamu dan pacarmu sekarang 🔮
+          Selamat datang di live saya, cek aja namamu dan pacarmu sekarang 🔮
+        </div>
+      </div>
+      <div class="marquee-row purple">
+        <div class="marquee-text">
+          Selamat datang di live saya, cek aja namamu dan pacarmu sekarang 🔮
+          Selamat datang di live saya, cek aja namamu dan pacarmu sekarang 🔮
+        </div>
+        <div class="marquee-text">
+          Selamat datang di live saya, cek aja namamu dan pacarmu sekarang 🔮
+          Selamat datang di live saya, cek aja namamu dan pacarmu sekarang 🔮
+        </div>
+      </div>
+      <div class="marquee-row pink">
+        <div class="marquee-text">
+          Selamat datang di live saya, cek aja namamu dan pacarmu sekarang 🔮
+          Selamat datang di live saya, cek aja namamu dan pacarmu sekarang 🔮
+        </div>
+        <div class="marquee-text">
+          Selamat datang di live saya, cek aja namamu dan pacarmu sekarang 🔮
+          Selamat datang di live saya, cek aja namamu dan pacarmu sekarang 🔮
+        </div>
+      </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div class="container">
+      <div class="header">
+        <h1>🔮 CocokkahJodohku 🔮</h1>
+        <p>Kalkulator Numerologi Jodoh</p>
+      </div>
+
+      <div class="main-layout">
+        <!-- Input section -->
+        <div class="input-section">
+          <div class="input-group">
+            <label for="name1"
+              ><i class="fa-solid fa-mars"></i> Nama Cowok</label
+            >
+            <div class="input-wrapper">
+              <input
+                type="text"
+                id="name1"
+                placeholder="Cth : Sianu"
+                onkeydown="handleEnterName1(event)"
+                autofocus
+              />
+              <i class="fa-solid fa-user"></i>
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="name2"
+              ><i class="fa-solid fa-venus"></i> Nama Cewek</label
+            >
+            <div class="input-wrapper">
+              <input
+                type="text"
+                id="name2"
+                placeholder="cth: Siani"
+                onkeydown="handleEnterName2(event)"
+              />
+              <i class="fa-solid fa-face-kiss"></i>
+            </div>
+          </div>
+          <button class="btn-hitung" onclick="mulaiHitung()">
+            Apakah Cocok <i class="fa-solid fa-question"></i
+          </button>
+        </div>
+
+        <!-- Result section with persistent dimensions -->
+        <div class="result-section">
+          <button
+            class="toggle-breakdown-btn"
+            id="toggleBreakdownBtn"
+            onclick="toggleBreakdown()"
+          >
+            <i class="fa-solid fa-eye"></i> Show Detail
+          </button>
+
+          <!-- Area detail ber-scroll agar tinggi layout tetap konsisten/menetap -->
+          <div id="breakdownArea">
+            <div
+              style="
+                text-align: center;
+                padding-top: 25px;
+                color: var(--text-muted);
+                font-size: 1rem;
+                line-height: 1.5;
+              "
+            >
+              <i
+                class="fa-solid fa-wand-magic-sparkles"
+                style="
+                  font-size: 1.8rem;
+                  color: var(--accent-pink);
+                  display: block;
+                  margin-bottom: 12px;
+                "
+              ></i>
+              Mari kita ramal kamu cocokahtidak dengan pacarmu sekarang??...
+            </div>
+          </div>
+
+          <div class="final-result-banner" id="finalBanner"></div>
+
+          <!-- Bagian Opsi Grid -->
+          <div class="options-container">
+            <div class="option-card" id="opt-0">
+              <i class="fa-solid fa-coins"></i>Rejeki
+            </div>
+            <div class="option-card" id="opt-1">
+              <i class="fa-solid fa-scale-balanced"></i>Seri
+            </div>
+            <div class="option-card" id="opt-2">
+              <i class="fa-solid fa-skull"></i>Kematian
+            </div>
+            <div class="option-card" id="opt-3">
+              <i class="fa-solid fa-baby-carriage"></i>Anak
+            </div>
+            <div class="option-card" id="opt-4">
+              <i class="fa-solid fa-face-laugh-beam"></i>Bahagia
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="history-section">
+        <div class="history-title">
+          <span><i class="fa-solid fa-clock-rotate-left"></i> Bagaimana ?</span>
+          <button class="btn-reset-history" onclick="hapusSemuaHistori()">
+            <i class="fa-solid fa-trash"></i> Reset
+          </button>
+        </div>
+        <div class="history-list" id="historyList">
+          <div
+            id="historyPlaceholder"
+            style="
+              text-align: center;
+              color: var(--text-muted);
+              padding: 15px 0;
+              font-size: 0.9rem;
+              font-style: italic;
+            "
+          >
+            Belum ada histori ramalan. Silakan masukkan nama di atas untuk
+            meramal!
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const hitungMap = {
+        A: 2,
+        B: 6,
+        C: 8,
+        D: 6,
+        E: 1,
+        F: 7,
+        G: 9,
+        H: 8,
+        I: 1,
+        J: 7,
+        K: 4,
+        L: 6,
+        M: 3,
+        N: 11,
+        O: 1,
+        P: 3,
+        Q: 0,
+        R: 7,
+        S: 8,
+        T: 4,
+        U: 10,
+        V: 7,
+        W: 10,
+        X: 4,
+        Y: 1,
+        Z: 7,
+      };
+
+      const opsiList = [
+        {
+          nama: "Rejeki",
+          class: "active-rejeki",
+          color: "#2ecc71",
+          icon: "fa-coins",
+          desc: "Limpahan rezeki mendatangi hubungan kalian!",
+        },
+        {
+          nama: "Seri",
+          class: "active-seri",
+          color: "#f1c40f",
+          icon: "fa-scale-balanced",
+          desc: "Seimbang, adil, penuh kompromi satu sama lain.",
+        },
+        {
+          nama: "Kematian",
+          class: "active-kematian",
+          color: "#e74c3c",
+          icon: "fa-skull",
+          desc: "Banyak cobaan berat atau transformasi besar menanti.",
+        },
+        {
+          nama: "Anak",
+          class: "active-anak",
+          color: "#9b59b6",
+          icon: "fa-baby-carriage",
+          desc: "Penuh berkah keturunan dan kebahagiaan anak cucu.",
+        },
+        {
+          nama: "Bahagia",
+          class: "active-bahagia",
+          color: "#e84393",
+          icon: "fa-face-laugh-beam",
+          desc: "Cinta sejati penuh keharmonisan abadi!",
+        },
+      ];
+
+      let breakdownVisible = false;
+      let arrayHistori = []; // Global array memory for persistence
+
+      window.onload = function () {
+        // Load data on window load
+        const stored = localStorage.getItem("jodoh_saved_history");
+        if (stored) {
+          try {
+            arrayHistori = JSON.parse(stored);
+            refreshHistoriUI();
+          } catch (e) {
+            arrayHistori = [];
+          }
+        }
+        document.getElementById("name1").focus();
+      };
+
+      // Fungsi toggle dengan visibilitas stabil
+      function toggleBreakdown() {
+        const area = document.getElementById("breakdownArea");
+        const btn = document.getElementById("toggleBreakdownBtn");
+        breakdownVisible = !breakdownVisible;
+
+        if (breakdownVisible) {
+          area.style.display = "block";
+          btn.innerHTML = `<i class="fa-solid fa-eye-slash"></i> Hide Detail`;
+        } else {
+          area.style.display = "none";
+          btn.innerHTML = `<i class="fa-solid fa-eye"></i> Show Detail`;
+        }
+      }
+
+      function playTickSound(isFinal = false) {
+        try {
+          const audioCtx = new (
+            window.AudioContext || window.webkitAudioContext
+          )();
+          const oscillator = audioCtx.createOscillator();
+          const gainNode = audioCtx.createGain();
+          oscillator.connect(gainNode);
+          gainNode.connect(audioCtx.destination);
+
+          if (isFinal) {
+            oscillator.type = "sine";
+            oscillator.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(
+              0.01,
+              audioCtx.currentTime + 0.4,
+            );
+          } else {
+            oscillator.type = "triangle";
+            oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
+            gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(
+              0.01,
+              audioCtx.currentTime + 0.05,
+            );
+          }
+          oscillator.start();
+          oscillator.stop(audioCtx.currentTime + (isFinal ? 0.4 : 0.05));
+        } catch (e) {}
+      }
+
+      function hitungSkorNama(nama) {
+        let bersih = nama.toUpperCase().replace(/[^A-Z]/g, "");
+        let detail = [];
+        let total = 0;
+        for (let huruf of bersih) {
+          let nilai = hitungMap[huruf] || 0;
+          total += nilai;
+          detail.push(`${huruf}(${nilai})`);
+        }
+        return { total, text: detail.join(" + ") || "0" };
+      }
+
+      function handleEnterName1(event) {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          document.getElementById("name2").focus();
+        }
+      }
+
+      function handleEnterName2(event) {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          mulaiHitung();
+        }
+      }
+
+      let isRunning = false;
+
+      function refreshHistoriUI() {
+        const list = document.getElementById("historyList");
+        list.innerHTML = "";
+
+        if (arrayHistori.length === 0) {
+          list.innerHTML = `
+            <div id="historyPlaceholder" style="text-align: center; color: var(--text-muted); padding: 15px 0; font-size: 0.95rem; font-style: italic;">
+              Belum ada histori ramalan. Silakan masukkan nama di atas untuk meramal!
+            </div>
+          `;
+          return;
+        }
+
+        // Loop array and generate HTML cards
+        arrayHistori.forEach((data) => {
+          const item = document.createElement("div");
+          item.className = "history-item";
+          item.style.borderLeftColor = data.color;
+          item.innerHTML = `
+            <div>
+              <span style="color: var(--accent-cyan); font-weight: bold;">${data.namaCowok.toUpperCase()}</span> 
+              <span style="color: var(--accent-pink); font-size: 0.8rem; margin: 0 4px;">❤️</span> 
+              <span style="color: var(--accent-pink); font-weight: bold;">${data.namaCewek.toUpperCase()}</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 0.85rem; color: var(--text-muted);">(Total: ${data.total})</span>
+              <span style="color: ${data.color}; font-weight: bold; background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px; font-size: 0.85rem; display: flex; align-items: center; gap: 6px;">
+                <i class="fa-solid ${data.icon}"></i> ${data.nama}
+              </span>
+            </div>
+          `;
+          list.appendChild(item);
+        });
+      }
+
+      function tambahKeHistori(namaCowok, namaCewek, opsi, total) {
+        const payload = {
+          namaCowok: namaCowok,
+          namaCewek: namaCewek,
+          total: total,
+          color: opsi.color,
+          icon: opsi.icon,
+          nama: opsi.nama,
+        };
+
+        // Insert new calculation to the beginning (TOP) of the array
+        arrayHistori.unshift(payload);
+
+        // Save progress to local storage so it persists indefinitely
+        localStorage.setItem(
+          "jodoh_saved_history",
+          JSON.stringify(arrayHistori),
+        );
+
+        // Render elements
+        refreshHistoriUI();
+
+        // Scroll history box back to the top to highlight the newest item
+        document.getElementById("historyList").scrollTop = 0;
+      }
+
+      function hapusSemuaHistori() {
+        arrayHistori = [];
+        localStorage.removeItem("jodoh_saved_history");
+        refreshHistoriUI();
+      }
+
+      function mulaiHitung() {
+        if (isRunning) return;
+        const n1 = document.getElementById("name1").value.trim();
+        const n2 = document.getElementById("name2").value.trim();
+
+        if (!n1 || !n2) {
+          // Temporarily show the breakdown area to display error
+          const originalDisplay =
+            document.getElementById("breakdownArea").style.display;
+          document.getElementById("breakdownArea").style.display = "block";
+          document.getElementById("breakdownArea").innerHTML = `
+            <div style="text-align: center; padding: 20px; color: var(--accent-pink); font-weight: 600; border: 1px dashed var(--accent-pink); border-radius: 12px; background: rgba(255,0,127,0.1); display: flex; flex-direction: column; align-items: center; gap: 10px;">
+              <i class="fa-solid fa-triangle-exclamation" style="font-size: 1.8rem;"></i>
+              Masukkan nama terlebih dahulu!
+            </div>
+          `;
+          setTimeout(() => {
+            document.getElementById("breakdownArea").style.display =
+              originalDisplay;
+          }, 3000);
+          return;
+        }
+        isRunning = true;
+
+        document.getElementById("finalBanner").innerHTML = "";
+
+        opsiList.forEach((opsi, idx) => {
+          const el = document.getElementById(`opt-${idx}`);
+          el.className = "option-card";
+          el.innerHTML = `<i class="fa-solid ${opsi.icon}"></i>${opsi.nama}`;
+        });
+
+        const res1 = hitungSkorNama(n1);
+        const res2 = hitungSkorNama(n2);
+        const grandTotal = res1.total + res2.total;
+
+        // Put calculations inside breakdown area (which is hidden by default)
+        document.getElementById("breakdownArea").innerHTML = `
+          <div class="name-total"><i class="fa-solid fa-mars" style="color: var(--accent-cyan)"></i> <strong>${n1.toUpperCase()}:</strong> ${res1.text} = <strong>${res1.total}</strong></div>
+          <div class="name-total"><i class="fa-solid fa-venus" style="color: var(--accent-pink)"></i> <strong>${n2.toUpperCase()}:</strong> ${res2.text} = <strong>${res2.total}</strong></div>
+          <div class="grand-total-box"><i class="fa-solid fa-calculator" style="font-size: 1.2rem; color: var(--accent-cyan);"></i> KOMULATIF TOTAL ANGKA<span>${grandTotal}</span></div>
+        `;
+
+        const targetIndex = grandTotal > 0 ? (grandTotal - 1) % 5 : 0;
+        const totalSteps = 20 + targetIndex;
+        let currentStep = 0;
+        let speed = 60;
+
+        function spin() {
+          if (currentStep > 0) {
+            const prevIdx = (currentStep - 1) % 5;
+            const prevEl = document.getElementById(`opt-${prevIdx}`);
+            prevEl.className = "option-card";
+          }
+          const currentIdx = currentStep % 5;
+          const currentEl = document.getElementById(`opt-${currentIdx}`);
+          currentEl.classList.add(opsiList[currentIdx].class);
+
+          playTickSound(false);
+          currentStep++;
+
+          if (currentStep <= totalSteps) {
+            if (totalSteps - currentStep < 8) speed += 45;
+            else if (totalSteps - currentStep < 4) speed += 90;
+            setTimeout(spin, speed);
+          } else {
+            setTimeout(() => {
+              playTickSound(true);
+              const finalOpsi = opsiList[targetIndex];
+              document.getElementById("finalBanner").innerHTML = `
+                <div class="final-name" style="color: ${finalOpsi.color}"><i class="fa-solid ${finalOpsi.icon}"></i> ${finalOpsi.nama}</div>
+                <div class="final-desc">${finalOpsi.desc}</div>
+              `;
+
+              // Save to History Log
+              tambahKeHistori(n1, n2, finalOpsi, grandTotal);
+
+              // Empty both inputs automatically
+              document.getElementById("name1").value = "";
+              document.getElementById("name2").value = "";
+
+              // Automatically refocus on first input (Nama Cowok)
+              document.getElementById("name1").focus();
+
+              isRunning = false;
+            }, 150);
+          }
+        }
+        spin();
+      }
+    </script>
+  </body>
+</html>
