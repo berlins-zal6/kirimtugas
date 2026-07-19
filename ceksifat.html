@@ -1,0 +1,1198 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>CekSifatnya</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <style>
+      /* */
+      :root {
+        --bg-primary: #0a0813;
+        --bg-secondary: #130f24;
+        --accent-neon: #ff0055;
+        --accent-glow: #00f0ff;
+        --accent-yellow: #f1c40f;
+        --text-main: #ffffff;
+        --text-muted: #8e89b3;
+
+        /* Sifat-sifat Colors */
+        --color-harimau: #e67e22;
+        --color-kucing: #ff6b81;
+        --color-pohon: #2ecc71;
+        --color-siang: #f39c12;
+        --color-kambing: #1abc9c;
+        --color-tikus: #95a5a6;
+        --color-elang: #00f0ff;
+        --color-ikan: #3498db;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Roboto, sans-serif;
+      }
+
+      body {
+        background-color: var(--bg-primary);
+        color: var(--text-main);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 12px;
+        background: radial-gradient(circle at center, #1b1437 0%, #0a0813 100%);
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      /* */
+      .bg-led-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        z-index: 0;
+        pointer-events: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        padding: 3vh 0;
+        opacity: 0.85;
+      }
+
+      /* Efek grid scanline digital pada layar */
+      .bg-led-wrapper::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background:
+          linear-gradient(rgba(10, 8, 19, 0) 50%, rgba(0, 0, 0, 0.5) 50%),
+          linear-gradient(
+            90deg,
+            rgba(255, 0, 85, 0.02),
+            rgba(0, 240, 255, 0.02)
+          );
+        background-size:
+          100% 4px,
+          4px 100%;
+        z-index: 2;
+        pointer-events: none;
+      }
+
+      .marquee-row {
+        display: flex;
+        width: max-content;
+        user-select: none;
+        z-index: 1;
+      }
+
+      .marquee-text {
+        font-family: "Impact", "Arial Black", sans-serif;
+        font-size: 5rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 10px;
+        white-space: nowrap;
+        padding-right: 120px;
+      }
+
+      .marquee-row.neon-pink .marquee-text {
+        color: #ff0055;
+        opacity: 0.15;
+        text-shadow:
+          0 0 5px #ff0055,
+          0 0 15px rgba(255, 0, 85, 0.8),
+          0 0 35px rgba(255, 0, 85, 0.4);
+        animation: scrollLeft 30s linear infinite;
+      }
+
+      .marquee-row.neon-cyan .marquee-text {
+        color: #00f0ff;
+        opacity: 0.18;
+        text-shadow:
+          0 0 5px #00f0ff,
+          0 0 15px rgba(0, 240, 255, 0.8),
+          0 0 35px rgba(0, 240, 255, 0.4);
+        animation: scrollRight 35s linear infinite;
+      }
+
+      .marquee-row.neon-yellow .marquee-text {
+        color: #f1c40f;
+        opacity: 0.12;
+        text-shadow:
+          0 0 5px #f1c40f,
+          0 0 15px rgba(241, 196, 15, 0.8);
+        animation: scrollLeft 42s linear infinite;
+      }
+
+      @keyframes scrollLeft {
+        0% {
+          transform: translateX(0%);
+        }
+        100% {
+          transform: translateX(-50%);
+        }
+      }
+
+      @keyframes scrollRight {
+        0% {
+          transform: translateX(-50%);
+        }
+        100% {
+          transform: translateX(0%);
+        }
+      }
+
+      /* */
+      .app-container {
+        width: 100%;
+        max-width: 950px;
+        background: rgba(15, 12, 28, 0.85);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 2px solid rgba(0, 240, 255, 0.3);
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow:
+          0 20px 60px rgba(0, 0, 0, 0.7),
+          0 0 50px rgba(255, 0, 85, 0.15),
+          inset 0 0 25px rgba(0, 240, 255, 0.05);
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        position: relative;
+        z-index: 10;
+      }
+
+      .app-header {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .app-header h1 {
+        font-size: 2.3rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        background: linear-gradient(
+          45deg,
+          var(--accent-neon),
+          var(--accent-glow)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        text-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+      }
+
+      .app-header p {
+        color: var(--text-muted);
+        margin-top: 5px;
+        font-size: 1rem;
+        font-weight: 500;
+      }
+
+      .main-grid {
+        display: grid;
+        grid-template-columns: 1fr 1.1fr;
+        gap: 20px;
+      }
+
+      @media (max-width: 768px) {
+        .main-grid {
+          grid-template-columns: 1fr;
+          gap: 15px;
+        }
+        .app-header h1 {
+          font-size: 1.9rem;
+        }
+        .app-container {
+          padding: 16px;
+        }
+        .marquee-text {
+          font-size: 3.2rem;
+        }
+      }
+
+      /* */
+      .input-box-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .form-group label {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--accent-glow);
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        letter-spacing: 1px;
+      }
+
+      .field-input-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .field-input-container i {
+        position: absolute;
+        left: 14px;
+        font-size: 1.1rem;
+        color: var(--text-muted);
+        transition: color 0.3s;
+      }
+
+      .form-group input {
+        width: 100%;
+        background: rgba(10, 8, 19, 0.9);
+        border: 2px solid rgba(142, 137, 179, 0.25);
+        border-radius: 10px;
+        padding: 14px 14px 14px 42px;
+        color: #fff;
+        font-size: 1.15rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: var(--accent-neon);
+        box-shadow: 0 0 15px rgba(255, 0, 85, 0.35);
+      }
+
+      .form-group input:focus + i {
+        color: var(--accent-neon);
+      }
+
+      .btn-reveal {
+        background: linear-gradient(45deg, var(--accent-neon), #ff3b00);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 15px;
+        font-size: 1.15rem;
+        font-weight: 800;
+        cursor: pointer;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+        box-shadow: 0 6px 15px rgba(255, 0, 85, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .btn-reveal:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 22px rgba(255, 0, 85, 0.5);
+      }
+
+      .btn-reveal:active {
+        transform: translateY(1px);
+      }
+
+      /* */
+      .results-panel {
+        background: rgba(10, 8, 19, 0.65);
+        border-radius: 14px;
+        padding: 20px;
+        border: 1px solid rgba(142, 137, 179, 0.15);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 400px;
+        box-sizing: border-box;
+      }
+
+      .toggle-details-btn {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(142, 137, 179, 0.2);
+        color: var(--text-muted);
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        align-self: flex-start;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .toggle-details-btn:hover {
+        background: rgba(0, 240, 255, 0.1);
+        border-color: var(--accent-glow);
+        color: #fff;
+      }
+
+      #mathBreakdownArea {
+        display: none;
+        max-height: 190px;
+        overflow-y: auto;
+        margin-bottom: 10px;
+        padding-right: 4px;
+      }
+
+      .letter-breakdown-card {
+        background: rgba(19, 15, 36, 0.7);
+        padding: 10px 12px;
+        border-radius: 8px;
+        border-left: 3px solid var(--accent-glow);
+        font-family: monospace;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem;
+        word-break: break-all;
+      }
+
+      .total-number-banner {
+        text-align: center;
+        margin: 10px 0;
+        padding: 12px;
+        background: rgba(0, 240, 255, 0.06);
+        border: 1px dashed var(--accent-glow);
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+      }
+
+      .total-number-banner span {
+        font-size: 1.9rem;
+        font-weight: 800;
+        color: var(--accent-glow);
+        display: block;
+        text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+      }
+
+      /* Grid 8 Opsi Sifat */
+      .sifat-grid-options {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+        margin-top: auto;
+        width: 100%;
+      }
+
+      @media (max-width: 480px) {
+        .sifat-grid-options {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      .sifat-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 2px solid rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        padding: 10px 2px;
+        text-align: center;
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        transition: all 0.1s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        min-width: 0;
+      }
+
+      .sifat-card i {
+        font-size: 0.9rem;
+        opacity: 0.4;
+        transition: opacity 0.1s ease;
+      }
+
+      /* */
+      .sifat-card.active-harimau {
+        background: var(--color-harimau);
+        color: #000;
+        border-color: #fff;
+        box-shadow: 0 0 12px var(--color-harimau);
+        transform: scale(1.06);
+      }
+      .sifat-card.active-harimau i {
+        opacity: 1;
+      }
+
+      .sifat-card.active-kucing {
+        background: var(--color-kucing);
+        color: #000;
+        border-color: #fff;
+        box-shadow: 0 0 12px var(--color-kucing);
+        transform: scale(1.06);
+      }
+      .sifat-card.active-kucing i {
+        opacity: 1;
+      }
+
+      .sifat-card.active-pohon {
+        background: var(--color-pohon);
+        color: #000;
+        border-color: #fff;
+        box-shadow: 0 0 12px var(--color-pohon);
+        transform: scale(1.06);
+      }
+      .sifat-card.active-pohon i {
+        opacity: 1;
+      }
+
+      .sifat-card.active-siang {
+        background: var(--color-siang);
+        color: #000;
+        border-color: #fff;
+        box-shadow: 0 0 12px var(--color-siang);
+        transform: scale(1.06);
+      }
+      .sifat-card.active-siang i {
+        opacity: 1;
+      }
+
+      .sifat-card.active-kambing {
+        background: var(--color-kambing);
+        color: #000;
+        border-color: #fff;
+        box-shadow: 0 0 12px var(--color-kambing);
+        transform: scale(1.06);
+      }
+      .sifat-card.active-kambing i {
+        opacity: 1;
+      }
+
+      .sifat-card.active-tikus {
+        background: var(--color-tikus);
+        color: #000;
+        border-color: #fff;
+        box-shadow: 0 0 12px var(--color-tikus);
+        transform: scale(1.06);
+      }
+      .sifat-card.active-tikus i {
+        opacity: 1;
+      }
+
+      .sifat-card.active-elang {
+        background: var(--color-elang);
+        color: #000;
+        border-color: #fff;
+        box-shadow: 0 0 12px var(--color-elang);
+        transform: scale(1.06);
+      }
+      .sifat-card.active-elang i {
+        opacity: 1;
+      }
+
+      .sifat-card.active-ikan {
+        background: var(--color-ikan);
+        color: #000;
+        border-color: #fff;
+        box-shadow: 0 0 12px var(--color-ikan);
+        transform: scale(1.06);
+      }
+      .sifat-card.active-ikan i {
+        opacity: 1;
+      }
+
+      /* Visual Reveal Banner */
+      .reveal-sifat-banner {
+        text-align: center;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        min-height: 90px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .reveal-title {
+        font-size: 1.85rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        animation: cardPulse 1s infinite alternate;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .reveal-explanation {
+        font-size: 0.9rem;
+        color: #fff;
+        margin-top: 6px;
+        font-weight: 500;
+        text-align: center;
+        padding: 0 10px;
+        line-height: 1.4;
+      }
+
+      /* */
+      .history-section {
+        margin-top: 15px;
+        background: rgba(10, 8, 19, 0.45);
+        border: 1px solid rgba(0, 240, 255, 0.15);
+        border-radius: 12px;
+        padding: 15px;
+      }
+
+      .history-header {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--accent-glow);
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(142, 137, 179, 0.15);
+        padding-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .history-records-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: 180px;
+        overflow-y: auto;
+        padding-right: 4px;
+      }
+
+      .clear-history-btn {
+        background: rgba(231, 76, 60, 0.15);
+        border: 1px solid rgba(231, 76, 60, 0.4);
+        color: #ff4d4d;
+        border-radius: 6px;
+        padding: 4px 10px;
+        font-size: 0.75rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        text-transform: uppercase;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .clear-history-btn:hover {
+        background: rgba(231, 76, 60, 0.3);
+        border-color: #ff4d4d;
+        box-shadow: 0 0 10px rgba(231, 76, 60, 0.25);
+      }
+
+      /* Custom Scrollbar */
+      .history-records-list::-webkit-scrollbar,
+      #mathBreakdownArea::-webkit-scrollbar {
+        width: 4px;
+      }
+      .history-records-list::-webkit-scrollbar-track,
+      #mathBreakdownArea::-webkit-scrollbar-track {
+        background: rgba(10, 8, 19, 0.5);
+        border-radius: 10px;
+      }
+      .history-records-list::-webkit-scrollbar-thumb,
+      #mathBreakdownArea::-webkit-scrollbar-thumb {
+        background: var(--accent-neon);
+        border-radius: 10px;
+      }
+
+      .record-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(19, 15, 36, 0.5);
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        border-left: 4px solid transparent;
+        animation: popIn 0.3s ease-out;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      @keyframes popIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes cardPulse {
+        from {
+          transform: scale(1);
+        }
+        to {
+          transform: scale(1.03);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Background LED Text Boards -->
+    <div class="bg-led-wrapper">
+      <div class="marquee-row neon-pink">
+        <div class="marquee-text">
+          Selamat datang di live saya, yuk cek sifatmu berdasarkan nama gratis!
+          🔮 Selamat datang di live saya, yuk cek sifatmu berdasarkan nama
+          gratis! 🔮
+        </div>
+        <div class="marquee-text">
+          Selamat datang di live saya, yuk cek sifatmu berdasarkan nama gratis!
+          🔮 Selamat datang di live saya, yuk cek sifatmu berdasarkan nama
+          gratis! 🔮
+        </div>
+      </div>
+      <div class="marquee-row neon-cyan">
+        <div class="marquee-text">
+          Ketik nama lengkapmu sekarang di komentar untuk dianalisa sifatnya! 🔮
+          Ketik nama lengkapmu sekarang di komentar untuk dianalisa sifatnya! 🔮
+        </div>
+        <div class="marquee-text">
+          Ketik nama lengkapmu sekarang di komentar untuk dianalisa sifatnya! 🔮
+          Ketik nama lengkapmu sekarang di komentar untuk dianalisa sifatnya! 🔮
+        </div>
+      </div>
+      <div class="marquee-row neon-yellow">
+        <div class="marquee-text">
+          Sifat asli terkuak! Harimau, Kucing, Pohon Besar, Siang Hari,
+          Kambing... 🔮 Sifat asli terkuak! Harimau, Kucing, Pohon Besar, Siang
+          Hari, Kambing... 🔮
+        </div>
+        <div class="marquee-text">
+          Sifat asli terkuak! Harimau, Kucing, Pohon Besar, Siang Hari,
+          Kambing... 🔮 Sifat asli terkuak! Harimau, Kucing, Pohon Besar, Siang
+          Hari, Kambing... 🔮
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="app-container">
+      <div class="app-header">
+        <h1>🔮 CekSifatnya 🔮</h1>
+        <p>Ramalan Sifat Karakter Asli Berdasarkan Nama</p>
+      </div>
+
+      <div class="main-grid">
+        <!-- Input section -->
+        <div class="input-box-wrapper">
+          <div class="form-group">
+            <label for="nameInput"
+              ><i class="fa-solid fa-signature"></i> Masukkan Nama</label
+            >
+            <div class="field-input-container">
+              <input
+                type="text"
+                id="nameInput"
+                placeholder="Cth : Berlinnnnnn"
+                onkeydown="handleInputKeyPress(event)"
+                autofocus
+              />
+              <i class="fa-solid fa-user-tag"></i>
+            </div>
+          </div>
+          <button class="btn-reveal" onclick="prosesAnalisisSifat()">
+            Temukan apa ?!
+          </button>
+        </div>
+
+        <!-- Result section -->
+        <div class="results-panel">
+          <button
+            class="toggle-details-btn"
+            id="toggleDetailsBtn"
+            onclick="toggleMathBreakdown()"
+          >
+            <i class="fa-solid fa-eye"></i> Show Detail
+          </button>
+
+          <!-- Area math breakdown -->
+          <div id="mathBreakdownArea">
+            <div
+              style="
+                text-align: center;
+                padding-top: 30px;
+                color: var(--text-muted);
+                font-size: 0.95rem;
+                line-height: 1.5;
+              "
+            >
+              <i
+                class="fa-solid fa-wand-magic-sparkles"
+                style="
+                  font-size: 1.8rem;
+                  color: var(--accent-neon);
+                  display: block;
+                  margin-bottom: 12px;
+                "
+              ></i>
+              Tulis namamu lalu kita bongkar rahasia sifat aslimu berdasarkan
+              kalkulasi numerologi kuno!
+            </div>
+          </div>
+
+          <!-- Big Reveal Display Area -->
+          <div class="reveal-sifat-banner" id="finalBanner"></div>
+
+          <!-- Grid 8 Opsi Sifat -->
+          <div class="sifat-grid-options">
+            <div class="sifat-card" id="opt-0">
+              <i class="fa-solid fa-paw"></i>Harimau
+            </div>
+            <div class="sifat-card" id="opt-1">
+              <i class="fa-solid fa-cat"></i>Kucing
+            </div>
+            <div class="sifat-card" id="opt-2">
+              <i class="fa-solid fa-tree"></i>Pohon Besar
+            </div>
+            <div class="sifat-card" id="opt-3">
+              <i class="fa-solid fa-sun"></i>Siang Hari
+            </div>
+            <div class="sifat-card" id="opt-4">
+              <i class="fa-solid fa-mountain"></i>Kambing
+            </div>
+            <div class="sifat-card" id="opt-5">
+              <i class="fa-solid fa-bolt"></i>Tikus
+            </div>
+            <div class="sifat-card" id="opt-6">
+              <i class="fa-solid fa-crow"></i>Elang
+            </div>
+            <div class="sifat-card" id="opt-7">
+              <i class="fa-solid fa-fish"></i>Ikan
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- History Logging Section -->
+      <div class="history-section">
+        <div class="history-header">
+          <span
+            ><i class="fa-solid fa-clock-rotate-left"></i> Catatan Riwayat
+            Cek</span
+          >
+          <button class="clear-history-btn" onclick="hapusSeluruhRiwayat()">
+            <i class="fa-solid fa-trash-can"></i> Hapus Semua
+          </button>
+        </div>
+        <div class="history-records-list" id="recordsList">
+          <div
+            id="recordsPlaceholder"
+            style="
+              text-align: center;
+              color: var(--text-muted);
+              padding: 15px 0;
+              font-size: 0.9rem;
+              font-style: italic;
+            "
+          >
+            Belum ada nama yang diperiksa. Ketik sebuah nama di atas untuk
+            melihat riwayat analisis!
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- -->
+    <script>
+      // Tabel Nilai Numerologi Custom sesuai spesifikasi user
+      const mapNumerologi = {
+        A: 2,
+        B: 6,
+        C: 8,
+        D: 6,
+        E: 1,
+        F: 7,
+        G: 9,
+        H: 8,
+        I: 1,
+        J: 7,
+        K: 4,
+        L: 6,
+        M: 3,
+        N: 11,
+        O: 1,
+        P: 3,
+        Q: 0,
+        R: 7,
+        S: 8,
+        T: 4,
+        U: 10,
+        V: 7,
+        W: 10,
+        X: 4,
+        Y: 1,
+        Z: 7,
+      };
+
+      // 8 Opsi Sifat beserta karakteristiknya
+      const listSifat = [
+        {
+          nama: "Harimau",
+          class: "active-harimau",
+          color: "var(--color-harimau)",
+          icon: "fa-paw",
+          desc: "Pemimpin yang kuat, karismatik, pemberani, berani mengambil risiko besar, namun terkadang keras kepala!",
+        },
+        {
+          nama: "Kucing",
+          class: "active-kucing",
+          color: "var(--color-kucing)",
+          icon: "fa-cat",
+          desc: "Mandiri, penuh rahasia, penuh kejutan, sangat peka terhadap lingkungan sekitar, dan mencintai kebebasan.",
+        },
+        {
+          nama: "Pohon Besar",
+          class: "active-pohon",
+          color: "var(--color-pohon)",
+          icon: "fa-tree",
+          desc: "Bijaksana, pelindung bagi orang sekitar, tenang, kokoh saat menghadapi badai hidup, serta tempat bersandar yang baik.",
+        },
+        {
+          nama: "Siang Hari",
+          class: "active-siang",
+          color: "var(--color-siang)",
+          icon: "fa-sun",
+          desc: "Ceria, penuh energi positif, suka menerangi hari orang lain, berani blak-blakan, jujur, namun mudah meledak emosinya.",
+        },
+        {
+          nama: "Kambing",
+          class: "active-kambing",
+          color: "var(--color-kambing)",
+          icon: "fa-mountain",
+          desc: "Sangat penyabar, pemaaf, tekun bekerja keras tanpa banyak mengeluh, cinta kedamaian, dan sangat setia kawan.",
+        },
+        {
+          nama: "Tikus",
+          class: "active-tikus",
+          color: "var(--color-tikus)",
+          icon: "fa-bolt",
+          desc: "Sangat cerdas mencari peluang, lincah, selalu punya seribu strategi, waspada tinggi, dan ahli mengatasi jalan buntu.",
+        },
+        {
+          nama: "Elang",
+          class: "active-elang",
+          color: "var(--color-elang)",
+          icon: "fa-crow",
+          desc: "Memiliki visi masa depan yang jelas, bertekad bulat mencapai target, mandiri, berwibawa tinggi, dan menyukai kebebasan mutlak.",
+        },
+        {
+          nama: "Ikan",
+          class: "active-ikan",
+          color: "var(--color-ikan)",
+          icon: "fa-fish",
+          desc: "Sangat fleksibel menyesuaikan diri, memiliki tingkat empati yang tinggi, kreatif, tenang, namun memiliki kedalaman emosi tersembunyi.",
+        },
+      ];
+
+      let isBreakdownShown = false;
+      let databaseHistory = [];
+
+      window.onload = function () {
+        // Load data from Local Storage jika tersedia
+        const savedData = localStorage.getItem("sifat_history_log");
+        if (savedData) {
+          try {
+            databaseHistory = JSON.parse(savedData);
+            renderRecordsUI();
+          } catch (err) {
+            databaseHistory = [];
+          }
+        }
+        document.getElementById("nameInput").focus();
+      };
+
+      // Toggle visibilitas detail kalkulasi matematika huruf
+      function toggleMathBreakdown() {
+        const area = document.getElementById("mathBreakdownArea");
+        const button = document.getElementById("toggleDetailsBtn");
+        isBreakdownShown = !isBreakdownShown;
+
+        if (isBreakdownShown) {
+          area.style.display = "block";
+          button.innerHTML = `<i class="fa-solid fa-eye-slash"></i> Hide Detail`;
+        } else {
+          area.style.display = "none";
+          button.innerHTML = `<i class="fa-solid fa-eye"></i> Show Detail`;
+        }
+      }
+
+      /* */
+      function triggerSoundEffect(isFinal = false) {
+        try {
+          const audioCtx = new (
+            window.AudioContext || window.webkitAudioContext
+          )();
+          const oscillator = audioCtx.createOscillator();
+          const gainNode = audioCtx.createGain();
+          oscillator.connect(gainNode);
+          gainNode.connect(audioCtx.destination);
+
+          if (isFinal) {
+            oscillator.type = "sine";
+            oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); // Nada C5 kemenangan
+            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(
+              0.01,
+              audioCtx.currentTime + 0.4,
+            );
+          } else {
+            oscillator.type = "triangle";
+            oscillator.frequency.setValueAtTime(750, audioCtx.currentTime);
+            gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(
+              0.01,
+              audioCtx.currentTime + 0.04,
+            );
+          }
+          oscillator.start();
+          oscillator.stop(audioCtx.currentTime + (isFinal ? 0.45 : 0.05));
+        } catch (e) {}
+      }
+
+      // Hitung numerologi string
+      function hitungNumerologiNama(nameStr) {
+        let cleanedStr = nameStr.toUpperCase().replace(/[^A-Z]/g, "");
+        let details = [];
+        let totalVal = 0;
+        for (let char of cleanedStr) {
+          let score = mapNumerologi[char] || 0;
+          totalVal += score;
+          details.push(`${char}(${score})`);
+        }
+        return { total: totalVal, text: details.join(" + ") || "0" };
+      }
+
+      function handleInputKeyPress(event) {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          prosesAnalisisSifat();
+        }
+      }
+
+      let isCalculationRunning = false;
+
+      // Render daftar riwayat agar konsisten
+      function renderRecordsUI() {
+        const parentList = document.getElementById("recordsList");
+        parentList.innerHTML = "";
+
+        if (databaseHistory.length === 0) {
+          parentList.innerHTML = `
+            <div id="recordsPlaceholder" style="text-align: center; color: var(--text-muted); padding: 15px 0; font-size: 0.9rem; font-style: italic;">
+              Belum ada nama yang diperiksa. Ketik sebuah nama di atas untuk melihat riwayat analisis!
+            </div>
+          `;
+          return;
+        }
+
+        databaseHistory.forEach((record) => {
+          const itemEl = document.createElement("div");
+          itemEl.className = "record-item";
+          itemEl.style.borderLeftColor = record.color;
+          itemEl.innerHTML = `
+            <div>
+              <span style="color: var(--accent-glow); font-weight: bold;">${record.namaSubjek.toUpperCase()}</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 0.85rem; color: var(--text-muted);">(Total: ${record.skorTotal})</span>
+              <span style="color: ${record.color}; font-weight: bold; background: rgba(255,255,255,0.04); padding: 4px 8px; border-radius: 6px; font-size: 0.85rem; display: flex; align-items: center; gap: 6px;">
+                <i class="fa-solid ${record.ikonSifat}"></i> ${record.sifatResult}
+              </span>
+            </div>
+          `;
+          parentList.appendChild(itemEl);
+        });
+      }
+
+      function tambahKeRiwayat(namaSubjek, sifatObj, skorTotal) {
+        const dataPayload = {
+          namaSubjek: namaSubjek,
+          skorTotal: skorTotal,
+          sifatResult: sifatObj.nama,
+          color: sifatObj.color,
+          ikonSifat: sifatObj.icon,
+        };
+
+        databaseHistory.unshift(dataPayload);
+
+        // Maksimum simpan 50 riwayat terakhir
+        if (databaseHistory.length > 50) {
+          databaseHistory.pop();
+        }
+
+        localStorage.setItem(
+          "sifat_history_log",
+          JSON.stringify(databaseHistory),
+        );
+        renderRecordsUI();
+        document.getElementById("recordsList").scrollTop = 0;
+      }
+
+      function hapusSeluruhRiwayat() {
+        databaseHistory = [];
+        localStorage.removeItem("sifat_history_log");
+        renderRecordsUI();
+      }
+
+      /* */
+      function prosesAnalisisSifat() {
+        if (isCalculationRunning) return;
+
+        const targetName = document.getElementById("nameInput").value.trim();
+
+        if (!targetName) {
+          // Tampilkan pesan error sementara di area breakdown
+          const currentDisplay =
+            document.getElementById("mathBreakdownArea").style.display;
+          document.getElementById("mathBreakdownArea").style.display = "block";
+          document.getElementById("mathBreakdownArea").innerHTML = `
+            <div style="text-align: center; padding: 20px; color: var(--accent-neon); font-weight: 600; border: 1px dashed var(--accent-neon); border-radius: 12px; background: rgba(255,0,85,0.1); display: flex; flex-direction: column; align-items: center; gap: 10px;">
+              <i class="fa-solid fa-circle-exclamation" style="font-size: 1.8rem;"></i>
+              Tolong ketikkan nama seseorang di kolom input terlebih dahulu!
+            </div>
+          `;
+          setTimeout(() => {
+            document.getElementById("mathBreakdownArea").style.display =
+              currentDisplay;
+          }, 3000);
+          return;
+        }
+
+        isCalculationRunning = true;
+        document.getElementById("finalBanner").innerHTML = "";
+
+        // Reset semua status kartu pilihan
+        listSifat.forEach((_, index) => {
+          const cardEl = document.getElementById(`opt-${index}`);
+          cardEl.className = "sifat-card";
+        });
+
+        // Lakukan perhitungan numerologi
+        const kalkulasi = hitungNumerologiNama(targetName);
+        const grandTotalScore = kalkulasi.total;
+
+        // Tampilkan kalkulasi matematika di dalam breakdown area
+        document.getElementById("mathBreakdownArea").innerHTML = `
+          <div class="letter-breakdown-card">
+            <i class="fa-solid fa-signature" style="color: var(--accent-glow)"></i>
+            <strong>${targetName.toUpperCase()}:</strong> ${kalkulasi.text} = <strong>${grandTotalScore}</strong>
+          </div>
+          <div class="total-number-banner">
+            <i class="fa-solid fa-calculator" style="font-size: 1.1rem; color: var(--accent-glow);"></i>
+            KUMULATIF NILAI ANGKA NAMA
+            <span>${grandTotalScore}</span>
+          </div>
+        `;
+
+        // Rumus looping 8 opsi: (grandTotalScore - 1) % 8
+        const finalTargetIndex =
+          grandTotalScore > 0 ? (grandTotalScore - 1) % 8 : 0;
+        const minimumSteps = 24 + finalTargetIndex; // Setidaknya berputar 3 kali penuh
+        let stepCount = 0;
+        let rotationSpeed = 50;
+
+        function jalankanPutaran() {
+          if (stepCount > 0) {
+            const indexSebelumnya = (stepCount - 1) % 8;
+            document.getElementById(`opt-${indexSebelumnya}`).className =
+              "sifat-card";
+          }
+
+          const indexSekarang = stepCount % 8;
+          const elemenSekarang = document.getElementById(
+            `opt-${indexSekarang}`,
+          );
+          elemenSekarang.classList.add(listSifat[indexSekarang].class);
+
+          triggerSoundEffect(false);
+          stepCount++;
+
+          if (stepCount <= minimumSteps) {
+            // Efek melambat secara bertahap saat mendekati target akhir
+            if (minimumSteps - stepCount < 10) {
+              rotationSpeed += 30;
+            } else if (minimumSteps - stepCount < 4) {
+              rotationSpeed += 80;
+            }
+            setTimeout(jalankanPutaran, rotationSpeed);
+          } else {
+            // Berhenti di target akhir yang dituju
+            setTimeout(() => {
+              triggerSoundEffect(true);
+              const sifatHasilSelesai = listSifat[finalTargetIndex];
+
+              // Tampilkan banner hasil dengan animasi menarik
+              document.getElementById("finalBanner").innerHTML = `
+                <div class="reveal-title" style="color: ${sifatHasilSelesai.color}">
+                  <i class="fa-solid ${sifatHasilSelesai.icon}"></i> Sifat: ${sifatHasilSelesai.nama}
+                </div>
+                <div class="reveal-explanation">${sifatHasilSelesai.desc}</div>
+              `;
+
+              // Catat nama dan sifat ke dalam database riwayat
+              tambahKeRiwayat(targetName, sifatHasilSelesai, grandTotalScore);
+
+              // Kosongkan kolom nama dan kembalikan fokus agar host live cepat memproses antrean berikutnya
+              document.getElementById("nameInput").value = "";
+              document.getElementById("nameInput").focus();
+
+              isCalculationRunning = false;
+            }, 180);
+          }
+        }
+
+        // Mulai simulasi putaran roulette
+        jalankanPutaran();
+      }
+    </script>
+  </body>
+</html>
