@@ -858,7 +858,7 @@
           desc: "Penuh berkah keturunan dan kekebahagiaanan anak cucu.",
         },
         {
-          nama: "kebahagiaan",
+          nama: "Kebahagiaan",
           class: "active-kebahagiaan",
           color: "#e84393",
           icon: "fa-face-laugh-beam",
@@ -956,8 +956,6 @@
         }
       }
 
-      let isRunning = false;
-
       function refreshHistoriUI() {
         const list = document.getElementById("historyList");
         list.innerHTML = "";
@@ -1026,7 +1024,6 @@
       }
 
       function mulaiHitung() {
-        if (isRunning) return;
         const n1 = document.getElementById("name1").value.trim();
         const n2 = document.getElementById("name2").value.trim();
 
@@ -1047,73 +1044,50 @@
           }, 3000);
           return;
         }
-        isRunning = true;
 
-        document.getElementById("finalBanner").innerHTML = "";
-
+        // Reset status kartu opsi
         opsiList.forEach((opsi, idx) => {
           const el = document.getElementById(`opt-${idx}`);
           el.className = "option-card";
           el.innerHTML = `<i class="fa-solid ${opsi.icon}"></i>${opsi.nama}`;
         });
 
+        // Hitung nilai numerologi
         const res1 = hitungSkorNama(n1);
         const res2 = hitungSkorNama(n2);
         const grandTotal = res1.total + res2.total;
 
-        // Put calculations inside breakdown area (which is hidden by default)
+        // Tampilkan kalkulasi detail pada area breakdown
         document.getElementById("breakdownArea").innerHTML = `
           <div class="name-total"><i class="fa-solid fa-mars" style="color: var(--accent-cyan)"></i> <strong>${n1.toUpperCase()}:</strong> ${res1.text} = <strong>${res1.total}</strong></div>
           <div class="name-total"><i class="fa-solid fa-venus" style="color: var(--accent-pink)"></i> <strong>${n2.toUpperCase()}:</strong> ${res2.text} = <strong>${res2.total}</strong></div>
           <div class="grand-total-box"><i class="fa-solid fa-calculator" style="font-size: 1.2rem; color: var(--accent-cyan);"></i> KOMULATIF TOTAL ANGKA<span>${grandTotal}</span></div>
         `;
 
+        // Tentukan indeks hasil secara instan tanpa animasi putar
         const targetIndex = grandTotal > 0 ? (grandTotal - 1) % 5 : 0;
-        const totalSteps = 20 + targetIndex;
-        let currentStep = 0;
-        let speed = 60;
+        const finalOpsi = opsiList[targetIndex];
 
-        function spin() {
-          if (currentStep > 0) {
-            const prevIdx = (currentStep - 1) % 5;
-            const prevEl = document.getElementById(`opt-${prevIdx}`);
-            prevEl.className = "option-card";
-          }
-          const currentIdx = currentStep % 5;
-          const currentEl = document.getElementById(`opt-${currentIdx}`);
-          currentEl.classList.add(opsiList[currentIdx].class);
+        // Sorot kartu terpilih langsung
+        const cardTerpilih = document.getElementById(`opt-${targetIndex}`);
+        cardTerpilih.classList.add(finalOpsi.class);
 
-          playTickSound(false);
-          currentStep++;
+        // Bunyi konfirmasi hasil
+        playTickSound(true);
 
-          if (currentStep <= totalSteps) {
-            if (totalSteps - currentStep < 8) speed += 45;
-            else if (totalSteps - currentStep < 4) speed += 90;
-            setTimeout(spin, speed);
-          } else {
-            setTimeout(() => {
-              playTickSound(true);
-              const finalOpsi = opsiList[targetIndex];
-              document.getElementById("finalBanner").innerHTML = `
-                <div class="final-name" style="color: ${finalOpsi.color}"><i class="fa-solid ${finalOpsi.icon}"></i> ${finalOpsi.nama}</div>
-                <div class="final-desc">${finalOpsi.desc}</div>
-              `;
+        // Tampilkan banner hasil
+        document.getElementById("finalBanner").innerHTML = `
+          <div class="final-name" style="color: ${finalOpsi.color}"><i class="fa-solid ${finalOpsi.icon}"></i> ${finalOpsi.nama}</div>
+          <div class="final-desc">${finalOpsi.desc}</div>
+        `;
 
-              // Save to History Log
-              tambahKeHistori(n1, n2, finalOpsi, grandTotal);
+        // Simpan ke riwayat histori
+        tambahKeHistori(n1, n2, finalOpsi, grandTotal);
 
-              // Empty both inputs automatically
-              document.getElementById("name1").value = "";
-              document.getElementById("name2").value = "";
-
-              // Automatically refocus on first input (Nama Cowok)
-              document.getElementById("name1").focus();
-
-              isRunning = false;
-            }, 150);
-          }
-        }
-        spin();
+        // Kosongkan input & kembalikan fokus ke nama pertama
+        document.getElementById("name1").value = "";
+        document.getElementById("name2").value = "";
+        document.getElementById("name1").focus();
       }
     </script>
   </body>
