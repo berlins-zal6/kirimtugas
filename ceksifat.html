@@ -12,7 +12,6 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
     <style>
-      /* */
       :root {
         --bg-primary: #0a0813;
         --bg-secondary: #130f24;
@@ -53,7 +52,6 @@
         position: relative;
       }
 
-      /* */
       .bg-led-wrapper {
         position: fixed;
         top: 0;
@@ -70,7 +68,6 @@
         opacity: 0.85;
       }
 
-      /* Efek grid scanline digital pada layar */
       .bg-led-wrapper::before {
         content: "";
         position: absolute;
@@ -156,7 +153,6 @@
         }
       }
 
-      /* */
       .app-container {
         width: 100%;
         max-width: 950px;
@@ -230,7 +226,6 @@
         }
       }
 
-      /* */
       .input-box-wrapper {
         display: flex;
         flex-direction: column;
@@ -321,7 +316,6 @@
         transform: translateY(1px);
       }
 
-      /* */
       .results-panel {
         background: rgba(10, 8, 19, 0.65);
         border-radius: 14px;
@@ -444,7 +438,7 @@
         transition: opacity 0.1s ease;
       }
 
-      /* */
+      /* Active States */
       .sifat-card.active-harimau {
         background: var(--color-harimau);
         color: #000;
@@ -533,7 +527,6 @@
         opacity: 1;
       }
 
-      /* Visual Reveal Banner */
       .reveal-sifat-banner {
         text-align: center;
         margin-top: 10px;
@@ -568,7 +561,6 @@
         line-height: 1.4;
       }
 
-      /* */
       .history-section {
         margin-top: 15px;
         background: rgba(10, 8, 19, 0.45);
@@ -725,9 +717,9 @@
         <!-- Input section -->
         <div class="input-box-wrapper">
           <div class="form-group">
-            <label for="nameInput"
-              ><i class="fa-solid fa-signature"></i> Masukkan Nama</label
-            >
+            <label for="nameInput">
+              <i class="fa-solid fa-signature"></i> Masukkan Nama
+            </label>
             <div class="field-input-container">
               <input
                 type="text"
@@ -815,9 +807,7 @@
       <!-- History Logging Section -->
       <div class="history-section">
         <div class="history-header">
-          <span
-            ><i class="fa-solid fa-clock-rotate-left"></i> Bagaimana ??</span
-          >
+          <span><i class="fa-solid fa-clock-rotate-left"></i> Bagaimana ??</span>
           <button class="clear-history-btn" onclick="hapusSeluruhRiwayat()">
             <i class="fa-solid fa-trash-can"></i> Reset
           </button>
@@ -833,43 +823,17 @@
               font-style: italic;
             "
           >
-            Belum ada nama yang diperiksa. Ketik sebuah nama di atas untuk
-            melihat riwayat analisis!
+            Belum ada nama yang diperiksa. Ketik sebuah nama di atas untuk melihat riwayat analisis!
           </div>
         </div>
       </div>
     </div>
 
-    <!-- -->
     <script>
-      // Tabel Nilai Numerologi Custom sesuai spesifikasi user
+      // Tabel Nilai Numerologi Custom
       const mapNumerologi = {
-        A: 2,
-        B: 6,
-        C: 8,
-        D: 6,
-        E: 1,
-        F: 7,
-        G: 9,
-        H: 8,
-        I: 1,
-        J: 7,
-        K: 4,
-        L: 6,
-        M: 3,
-        N: 11,
-        O: 1,
-        P: 3,
-        Q: 0,
-        R: 7,
-        S: 8,
-        T: 4,
-        U: 10,
-        V: 7,
-        W: 10,
-        X: 4,
-        Y: 1,
-        Z: 7,
+        A: 2, B: 6, C: 8, D: 6, E: 1, F: 7, G: 9, H: 8, I: 1, J: 7, K: 4, L: 6, M: 3,
+        N: 11, O: 1, P: 3, Q: 0, R: 7, S: 8, T: 4, U: 10, V: 7, W: 10, X: 4, Y: 1, Z: 7
       };
 
       // 8 Opsi Sifat beserta karakteristiknya
@@ -879,64 +843,64 @@
           class: "active-harimau",
           color: "var(--color-harimau)",
           icon: "fa-paw",
-          desc: "Pemimpin yang kuat, karismatik, pemberani, berani mengambil risiko besar, namun terkadang keras kepala!",
+          desc: "Pemimpin yang kuat, karismatik, pemberani, berani mengambil risiko besar, namun terkadang keras kepala!"
         },
         {
           nama: "Kucing",
           class: "active-kucing",
           color: "var(--color-kucing)",
           icon: "fa-cat",
-          desc: "Mandiri, penuh rahasia, penuh kejutan, sangat peka terhadap lingkungan sekitar, dan mencintai kebebasan.",
+          desc: "Mandiri, penuh rahasia, penuh kejutan, sangat peka terhadap lingkungan sekitar, dan mencintai kebebasan."
         },
         {
           nama: "Pohon Besar",
           class: "active-pohon",
           color: "var(--color-pohon)",
           icon: "fa-tree",
-          desc: "Bijaksana, pelindung bagi orang sekitar, tenang, kokoh saat menghadapi badai hidup, serta tempat bersandar yang baik.",
+          desc: "Bijaksana, pelindung bagi orang sekitar, tenang, kokoh saat menghadapi badai hidup, serta tempat bersandar yang baik."
         },
         {
           nama: "Siang Hari",
           class: "active-siang",
           color: "var(--color-siang)",
           icon: "fa-sun",
-          desc: "Ceria, penuh energi positif, suka menerangi hari orang lain, berani blak-blakan, jujur, namun mudah meledak emosinya.",
+          desc: "Ceria, penuh energi positif, suka menerangi hari orang lain, berani blak-blakan, jujur, namun mudah meledak emosinya."
         },
         {
           nama: "Kambing",
           class: "active-kambing",
           color: "var(--color-kambing)",
           icon: "fa-mountain",
-          desc: "Sangat penyabar, pemaaf, tekun bekerja keras tanpa banyak mengeluh, cinta kedamaian, dan sangat setia kawan.",
+          desc: "Sangat penyabar, pemaaf, tekun bekerja keras tanpa banyak mengeluh, cinta kedamaian, dan sangat setia kawan."
         },
         {
           nama: "Tikus",
           class: "active-tikus",
           color: "var(--color-tikus)",
           icon: "fa-bolt",
-          desc: "Sangat cerdas mencari peluang, lincah, selalu punya seribu strategi, waspada tinggi, dan ahli mengatasi jalan buntu.",
+          desc: "Sangat cerdas mencari peluang, lincah, selalu punya seribu strategi, waspada tinggi, dan ahli mengatasi jalan buntu."
         },
         {
           nama: "Elang",
           class: "active-elang",
           color: "var(--color-elang)",
           icon: "fa-crow",
-          desc: "Memiliki visi masa depan yang jelas, bertekad bulat mencapai target, mandiri, berwibawa tinggi, dan menyukai kebebasan mutlak.",
+          desc: "Memiliki visi masa depan yang jelas, bertekad bulat mencapai target, mandiri, berwibawa tinggi, dan menyukai kebebasan mutlak."
         },
         {
           nama: "Ikan",
           class: "active-ikan",
           color: "var(--color-ikan)",
           icon: "fa-fish",
-          desc: "Sangat fleksibel menyesuaikan diri, memiliki tingkat empati yang tinggi, kreatif, tenang, namun memiliki kedalaman emosi tersembunyi.",
-        },
+          desc: "Sangat fleksibel menyesuaikan diri, memiliki tingkat empati yang tinggi, kreatif, tenang, namun memiliki kedalaman emosi tersembunyi."
+        }
       ];
 
       let isBreakdownShown = false;
       let databaseHistory = [];
 
       window.onload = function () {
-        // Load data from Local Storage jika tersedia
+        // Load data dari Local Storage jika ada
         const savedData = localStorage.getItem("sifat_history_log");
         if (savedData) {
           try {
@@ -949,7 +913,6 @@
         document.getElementById("nameInput").focus();
       };
 
-      // Toggle visibilitas detail kalkulasi matematika huruf
       function toggleMathBreakdown() {
         const area = document.getElementById("mathBreakdownArea");
         const button = document.getElementById("toggleDetailsBtn");
@@ -964,40 +927,24 @@
         }
       }
 
-      /* */
-      function triggerSoundEffect(isFinal = false) {
+      function triggerSoundEffect() {
         try {
-          const audioCtx = new (
-            window.AudioContext || window.webkitAudioContext
-          )();
+          const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
           const oscillator = audioCtx.createOscillator();
           const gainNode = audioCtx.createGain();
           oscillator.connect(gainNode);
           gainNode.connect(audioCtx.destination);
 
-          if (isFinal) {
-            oscillator.type = "sine";
-            oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); // Nada C5 kemenangan
-            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(
-              0.01,
-              audioCtx.currentTime + 0.4,
-            );
-          } else {
-            oscillator.type = "triangle";
-            oscillator.frequency.setValueAtTime(750, audioCtx.currentTime);
-            gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(
-              0.01,
-              audioCtx.currentTime + 0.04,
-            );
-          }
+          oscillator.type = "sine";
+          oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); // Nada C5
+          gainNode.gain.setValueAtTime(0.25, audioCtx.currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+
           oscillator.start();
-          oscillator.stop(audioCtx.currentTime + (isFinal ? 0.45 : 0.05));
+          oscillator.stop(audioCtx.currentTime + 0.35);
         } catch (e) {}
       }
 
-      // Hitung numerologi string
       function hitungNumerologiNama(nameStr) {
         let cleanedStr = nameStr.toUpperCase().replace(/[^A-Z]/g, "");
         let details = [];
@@ -1017,9 +964,6 @@
         }
       }
 
-      let isCalculationRunning = false;
-
-      // Render daftar riwayat agar konsisten
       function renderRecordsUI() {
         const parentList = document.getElementById("recordsList");
         parentList.innerHTML = "";
@@ -1058,20 +1002,16 @@
           skorTotal: skorTotal,
           sifatResult: sifatObj.nama,
           color: sifatObj.color,
-          ikonSifat: sifatObj.icon,
+          ikonSifat: sifatObj.icon
         };
 
         databaseHistory.unshift(dataPayload);
 
-        // Maksimum simpan 50 riwayat terakhir
         if (databaseHistory.length > 50) {
           databaseHistory.pop();
         }
 
-        localStorage.setItem(
-          "sifat_history_log",
-          JSON.stringify(databaseHistory),
-        );
+        localStorage.setItem("sifat_history_log", JSON.stringify(databaseHistory));
         renderRecordsUI();
         document.getElementById("recordsList").scrollTop = 0;
       }
@@ -1082,16 +1022,11 @@
         renderRecordsUI();
       }
 
-      /* */
       function prosesAnalisisSifat() {
-        if (isCalculationRunning) return;
-
         const targetName = document.getElementById("nameInput").value.trim();
 
         if (!targetName) {
-          // Tampilkan pesan error sementara di area breakdown
-          const currentDisplay =
-            document.getElementById("mathBreakdownArea").style.display;
+          const currentDisplay = document.getElementById("mathBreakdownArea").style.display;
           document.getElementById("mathBreakdownArea").style.display = "block";
           document.getElementById("mathBreakdownArea").innerHTML = `
             <div style="text-align: center; padding: 20px; color: var(--accent-neon); font-weight: 600; border: 1px dashed var(--accent-neon); border-radius: 12px; background: rgba(255,0,85,0.1); display: flex; flex-direction: column; align-items: center; gap: 10px;">
@@ -1100,26 +1035,22 @@
             </div>
           `;
           setTimeout(() => {
-            document.getElementById("mathBreakdownArea").style.display =
-              currentDisplay;
+            document.getElementById("mathBreakdownArea").style.display = currentDisplay;
           }, 3000);
           return;
         }
 
-        isCalculationRunning = true;
-        document.getElementById("finalBanner").innerHTML = "";
-
-        // Reset semua status kartu pilihan
+        // Reset status kartu
         listSifat.forEach((_, index) => {
           const cardEl = document.getElementById(`opt-${index}`);
           cardEl.className = "sifat-card";
         });
 
-        // Lakukan perhitungan numerologi
+        // Hitung numerologi
         const kalkulasi = hitungNumerologiNama(targetName);
         const grandTotalScore = kalkulasi.total;
 
-        // Tampilkan kalkulasi matematika di dalam breakdown area
+        // Tampilkan breakdown numerologi
         document.getElementById("mathBreakdownArea").innerHTML = `
           <div class="letter-breakdown-card">
             <i class="fa-solid fa-signature" style="color: var(--accent-glow)"></i>
@@ -1132,65 +1063,31 @@
           </div>
         `;
 
-        // Rumus looping 8 opsi: (grandTotalScore - 1) % 8
-        const finalTargetIndex =
-          grandTotalScore > 0 ? (grandTotalScore - 1) % 8 : 0;
-        const minimumSteps = 24 + finalTargetIndex; // Setidaknya berputar 3 kali penuh
-        let stepCount = 0;
-        let rotationSpeed = 50;
+        // Ambil indeks sifat (0-7)
+        const finalTargetIndex = grandTotalScore > 0 ? (grandTotalScore - 1) % 8 : 0;
+        const sifatHasil = listSifat[finalTargetIndex];
 
-        function jalankanPutaran() {
-          if (stepCount > 0) {
-            const indexSebelumnya = (stepCount - 1) % 8;
-            document.getElementById(`opt-${indexSebelumnya}`).className =
-              "sifat-card";
-          }
+        // Aktifkan kartu hasil secara langsung
+        const elemenAktif = document.getElementById(`opt-${finalTargetIndex}`);
+        elemenAktif.classList.add(sifatHasil.class);
 
-          const indexSekarang = stepCount % 8;
-          const elemenSekarang = document.getElementById(
-            `opt-${indexSekarang}`,
-          );
-          elemenSekarang.classList.add(listSifat[indexSekarang].class);
+        // Bunyi suara efek konfirmasi
+        triggerSoundEffect();
 
-          triggerSoundEffect(false);
-          stepCount++;
+        // Tampilkan banner hasil secara instan
+        document.getElementById("finalBanner").innerHTML = `
+          <div class="reveal-title" style="color: ${sifatHasil.color}">
+            <i class="fa-solid ${sifatHasil.icon}"></i> Sifat: ${sifatHasil.nama}
+          </div>
+          <div class="reveal-explanation">${sifatHasil.desc}</div>
+        `;
 
-          if (stepCount <= minimumSteps) {
-            // Efek melambat secara bertahap saat mendekati target akhir
-            if (minimumSteps - stepCount < 10) {
-              rotationSpeed += 30;
-            } else if (minimumSteps - stepCount < 4) {
-              rotationSpeed += 80;
-            }
-            setTimeout(jalankanPutaran, rotationSpeed);
-          } else {
-            // Berhenti di target akhir yang dituju
-            setTimeout(() => {
-              triggerSoundEffect(true);
-              const sifatHasilSelesai = listSifat[finalTargetIndex];
+        // Catat ke riwayat
+        tambahKeRiwayat(targetName, sifatHasil, grandTotalScore);
 
-              // Tampilkan banner hasil dengan animasi menarik
-              document.getElementById("finalBanner").innerHTML = `
-                <div class="reveal-title" style="color: ${sifatHasilSelesai.color}">
-                  <i class="fa-solid ${sifatHasilSelesai.icon}"></i> Sifat: ${sifatHasilSelesai.nama}
-                </div>
-                <div class="reveal-explanation">${sifatHasilSelesai.desc}</div>
-              `;
-
-              // Catat nama dan sifat ke dalam database riwayat
-              tambahKeRiwayat(targetName, sifatHasilSelesai, grandTotalScore);
-
-              // Kosongkan kolom nama dan kembalikan fokus agar host live cepat memproses antrean berikutnya
-              document.getElementById("nameInput").value = "";
-              document.getElementById("nameInput").focus();
-
-              isCalculationRunning = false;
-            }, 180);
-          }
-        }
-
-        // Mulai simulasi putaran roulette
-        jalankanPutaran();
+        // Reset input dan kembalikan fokus
+        document.getElementById("nameInput").value = "";
+        document.getElementById("nameInput").focus();
       }
     </script>
   </body>
