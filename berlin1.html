@@ -1,0 +1,779 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Untuk Febri</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Custom CSS Styles and Animations -->
+    <style>
+      body {
+        font-family: "Fredoka", "Quicksand", sans-serif;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      /* Scenic Background Image with Dark Overlay */
+      .bg-scenic {
+        background-image:
+          linear-gradient(
+            to bottom,
+            rgba(10, 25, 47, 0.4),
+            rgba(10, 25, 47, 0.6)
+          ),
+          url("https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80");
+        background-size: cover;
+        background-position: center;
+      }
+
+      /* Glassmorphism Card Style */
+      .bucin-card {
+        background: rgba(13, 27, 42, 0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 2px solid rgba(255, 255, 255, 0.9);
+        box-shadow:
+          0 20px 40px rgba(0, 0, 0, 0.4),
+          0 0 20px rgba(255, 255, 255, 0.1);
+      }
+
+      /* Pulsing Glow Animation for Avatar Frame */
+      @keyframes avatarPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+        50% {
+          box-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
+        }
+      }
+
+      .avatar-glow {
+        animation: avatarPulse 3s infinite ease-in-out;
+      }
+
+      /* Button Custom Glow and Active State */
+      .pink-btn {
+        background: linear-gradient(135deg, #ff6584, #e04070);
+        box-shadow: 0 6px 15px rgba(224, 64, 112, 0.4);
+        transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .pink-btn:active {
+        transform: scale(0.93);
+      }
+
+      /* Calculator Button Styles */
+      .calc-btn {
+        background: #f472b6;
+        color: white;
+        font-weight: 700;
+        border-radius: 1rem;
+        box-shadow:
+          inset 0 -3px 0 rgba(0, 0, 0, 0.2),
+          0 4px 10px rgba(244, 114, 182, 0.3);
+        transition: all 0.15s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+      }
+
+      .calc-btn:active {
+        transform: translateY(2px);
+        box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+      }
+
+      .calc-btn-action {
+        background: #e11d48;
+      }
+
+      /* Custom Typing Caret Cursor */
+      .typing-cursor::after {
+        content: "|";
+        animation: blink 0.8s infinite;
+      }
+
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+
+      /* Floating Hearts Background Animation */
+      .floating-heart {
+        position: absolute;
+        pointer-events: none;
+        animation: floatUp 4s linear forwards;
+        opacity: 0.8;
+      }
+
+      @keyframes floatUp {
+        0% {
+          transform: translateY(0) scale(0.8) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-100vh) scale(1.3) rotate(360deg);
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body
+    class="bg-scenic min-h-screen flex flex-col justify-between items-center text-white p-4 relative overflow-hidden"
+  >
+    <!-- Audio Element (Ditahan hingga verifikasi berhasil) -->
+    <audio
+      id="bgMusic"
+      src="jangan kau tinggalkanku.mp3"
+      loop
+      preload="auto"
+    ></audio>
+
+    <!-- VERIFICATION MODAL / LOCK SCREEN (Background disamakan dengan tampilan utama) -->
+    <div
+      id="verifyModal"
+      class="fixed inset-0 bg-black/40 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-all duration-500"
+    >
+      <div
+        class="bucin-card rounded-3xl p-6 sm:p-8 w-full max-w-sm text-center relative"
+      >
+        <span
+          class="absolute top-3 left-3 text-white/70 text-lg font-mono leading-none"
+          >┌</span
+        >
+        <span
+          class="absolute bottom-3 right-3 text-white/70 text-lg font-mono leading-none"
+          >┘</span
+        >
+
+        <div class="text-4xl mb-3">💖</div>
+        <h2 class="text-xl sm:text-2xl font-bold text-white mb-2">
+          Hanya untuk-mu
+        </h2>
+        <p class="text-sm text-gray-200 mb-6 font-medium">Siapa nama kamu ?</p>
+
+        <form onsubmit="handleVerification(event)" class="space-y-4">
+          <input
+            type="text"
+            id="nameInput"
+            placeholder="..."
+            autocomplete="off"
+            class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border-2 border-white/40 text-white placeholder-gray-400 focus:outline-none focus:border-pink-500 text-center font-semibold transition"
+          />
+          <p id="errorMsg" class="text-rose-400 text-xs font-semibold hidden">
+            Nama ini tidak cocok, berarti ini bukan untukmu! 🫣
+          </p>
+          <button
+            type="submit"
+            class="pink-btn text-white text-base font-bold w-full py-3 rounded-xl border border-white/80 hover:scale-[1.02] active:scale-95 transition-all shadow-lg"
+          >
+            Buka ✨
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Top Mock Browser Bar -->
+    <div
+      class="w-full max-w-sm flex items-center justify-between pt-2 px-2 z-10 text-white/90"
+    >
+      <div
+        class="flex items-center space-x-2 bg-black/30 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 w-full mr-2"
+      >
+        <svg
+          class="w-4 h-4 text-white/70 shrink-0"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          ></path>
+        </svg>
+        <span class="text-xs tracking-wide font-medium truncate"
+          >s.id/ayonghatihiaajadeh</span
+        >
+      </div>
+      <button
+        onclick="location.reload()"
+        class="p-1.5 bg-black/30 backdrop-blur-md rounded-full border border-white/20 hover:bg-white/20 transition"
+      >
+        <svg
+          class="w-4 h-4 text-white"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Center Bucin Card Container -->
+    <main class="my-auto w-full max-w-[340px] sm:max-w-[380px] z-10">
+      <!-- VIEW 1: INTRO CARD -->
+      <div
+        id="introCard"
+        class="bucin-card rounded-3xl p-6 sm:p-8 text-center relative transition-all duration-500"
+      >
+        <!-- Corner Brackets -->
+        <span
+          class="absolute top-3 left-3 text-white/70 text-lg font-mono leading-none"
+          >┌</span
+        >
+        <span
+          class="absolute bottom-3 right-3 text-white/70 text-lg font-mono leading-none"
+          >┘</span
+        >
+
+        <!-- Cute Cat Avatar Container -->
+        <div class="relative w-28 h-28 sm:w-32 sm:h-32 mx-auto mb-6">
+          <div
+            class="w-full h-full rounded-full border-2 border-white/80 overflow-hidden bg-slate-800/80 p-2 flex items-center justify-center avatar-glow"
+          >
+            <!-- SVG Cute Cat Sticker -->
+            <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-md">
+              <path
+                d="M 20 40 L 10 15 L 35 25 Z"
+                fill="#D1D5DB"
+                stroke="#374151"
+                stroke-width="2.5"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M 80 40 L 90 15 L 65 25 Z"
+                fill="#D1D5DB"
+                stroke="#374151"
+                stroke-width="2.5"
+                stroke-linejoin="round"
+              />
+              <path d="M 22 36 L 16 20 L 32 26 Z" fill="#F472B6" />
+              <path d="M 78 36 L 84 20 L 68 26 Z" fill="#F472B6" />
+              <ellipse
+                cx="50"
+                cy="52"
+                rx="36"
+                ry="30"
+                fill="#E5E7EB"
+                stroke="#374151"
+                stroke-width="2.5"
+              />
+              <path
+                d="M 32 48 Q 38 42 44 48"
+                fill="none"
+                stroke="#1F2937"
+                stroke-width="3"
+                stroke-linecap="round"
+              />
+              <path
+                d="M 56 48 Q 62 42 68 48"
+                fill="none"
+                stroke="#1F2937"
+                stroke-width="3"
+                stroke-linecap="round"
+              />
+              <ellipse
+                cx="28"
+                cy="54"
+                rx="5"
+                ry="3"
+                fill="#FB7185"
+                opacity="0.7"
+              />
+              <ellipse
+                cx="72"
+                cy="54"
+                rx="5"
+                ry="3"
+                fill="#FB7185"
+                opacity="0.7"
+              />
+              <polygon points="50,52 47,55 53,55" fill="#374151" />
+              <path
+                d="M 46 56 Q 50 60 54 56"
+                fill="none"
+                stroke="#374151"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <ellipse
+                cx="43"
+                cy="68"
+                rx="7"
+                ry="9"
+                fill="#FFFFFF"
+                stroke="#374151"
+                stroke-width="2"
+              />
+              <ellipse
+                cx="57"
+                cy="68"
+                rx="7"
+                ry="9"
+                fill="#FFFFFF"
+                stroke="#374151"
+                stroke-width="2"
+              />
+              <path
+                d="M 12 55 L 14 50 L 16 55 L 21 57 L 16 59 L 14 64 L 12 59 L 7 57 Z"
+                fill="#FCD34D"
+              />
+              <path
+                d="M 82 30 L 83 26 L 85 30 L 89 31 L 85 32 L 83 36 L 82 32 L 78 31 Z"
+                fill="#FCD34D"
+              />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Main Math Expression Typing Text -->
+        <div
+          id="mathText"
+          class="text-3xl sm:text-4xl font-bold tracking-wider mb-3 text-white min-h-[48px] flex items-center justify-center"
+        ></div>
+
+        <!-- Subtitle Question Text -->
+        <div
+          id="questionText"
+          class="text-lg sm:text-xl font-semibold text-gray-100 mb-8 min-h-[32px] flex items-center justify-center"
+        ></div>
+
+        <!-- Interactive Action Button -->
+        <div class="relative inline-block">
+          <button
+            id="nextBtn"
+            onclick="showCalculator()"
+            class="pink-btn text-white text-base sm:text-lg font-bold px-8 py-2.5 rounded-full border-2 border-white/90 flex items-center space-x-2 mx-auto hover:scale-105 active:scale-95 transition-all opacity-0 pointer-events-none"
+          >
+            <span>Lanjut</span>
+            <span class="text-xl">👉</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- VIEW 2: CALCULATOR CARD -->
+      <div
+        id="calcCard"
+        class="bucin-card rounded-3xl p-5 text-center relative transition-all duration-500 hidden"
+      >
+        <!-- Corner Brackets -->
+        <span
+          class="absolute top-3 left-3 text-white/70 text-lg font-mono leading-none"
+          >┌</span
+        >
+        <span
+          class="absolute bottom-3 right-3 text-white/70 text-lg font-mono leading-none"
+          >┘</span
+        >
+
+        <h2
+          class="text-xl font-bold text-white mb-4 mt-1 flex items-center justify-center space-x-2"
+        >
+          <span>24 + 5 + 2026 ?</span>
+          <span>😚</span>
+        </h2>
+
+        <!-- Calculator Outer Frame -->
+        <div
+          class="bg-slate-900/90 border-2 border-white/80 rounded-2xl p-4 shadow-inner"
+        >
+          <!-- Screen Display -->
+          <div
+            class="bg-black/90 rounded-xl p-3 mb-4 text-right border border-white/20 min-h-[64px] flex items-center justify-end overflow-hidden"
+          >
+            <span
+              id="calcDisplay"
+              class="text-2xl font-bold text-white tracking-wider break-all leading-tight"
+              >0</span
+            >
+          </div>
+
+          <!-- Buttons Grid -->
+          <div class="grid grid-cols-4 gap-2.5 text-xl">
+            <!-- Row 1 -->
+            <button
+              onclick="calcClear()"
+              class="calc-btn col-span-2 py-2.5 text-lg"
+            >
+              C
+            </button>
+            <button onclick="calcInput('/')" class="calc-btn py-2.5">/</button>
+            <button
+              onclick="calcCalculate()"
+              class="calc-btn calc-btn-action py-2.5"
+            >
+              =
+            </button>
+
+            <!-- Row 2 -->
+            <button onclick="calcInput('7')" class="calc-btn py-2.5">7</button>
+            <button onclick="calcInput('8')" class="calc-btn py-2.5">8</button>
+            <button onclick="calcInput('9')" class="calc-btn py-2.5">9</button>
+            <button onclick="calcInput('-')" class="calc-btn py-2.5">-</button>
+
+            <!-- Row 3 -->
+            <button onclick="calcInput('4')" class="calc-btn py-2.5">4</button>
+            <button onclick="calcInput('5')" class="calc-btn py-2.5">5</button>
+            <button onclick="calcInput('6')" class="calc-btn py-2.5">6</button>
+            <button onclick="calcInput('*')" class="calc-btn py-2.5">x</button>
+
+            <!-- Row 4 -->
+            <button onclick="calcInput('1')" class="calc-btn py-2.5">1</button>
+            <button onclick="calcInput('2')" class="calc-btn py-2.5">2</button>
+            <button onclick="calcInput('3')" class="calc-btn py-2.5">3</button>
+            <button onclick="calcInput('+')" class="calc-btn py-2.5">+</button>
+
+            <!-- Row 5 -->
+            <button onclick="calcInput('0')" class="calc-btn col-span-2 py-2.5">
+              0
+            </button>
+            <button onclick="calcInput('.')" class="calc-btn py-2.5">.</button>
+            <button onclick="calcInput('%')" class="calc-btn py-2.5">%</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW 3: MESSAGE CARD (LOADING & TYPING RESULT) -->
+      <div
+        id="resultCard"
+        class="bucin-card rounded-3xl p-6 sm:p-7 relative transition-all duration-500 hidden min-h-[380px] flex flex-col justify-start"
+      >
+        <!-- Corner Brackets -->
+        <span
+          class="absolute top-3 left-3 text-white/70 text-lg font-mono leading-none"
+          >┌</span
+        >
+        <span
+          class="absolute bottom-3 right-3 text-white/70 text-lg font-mono leading-none"
+          >┘</span
+        >
+
+        <!-- Party Horn Icon Top Right -->
+        <span class="absolute top-4 right-4 text-2xl">🎉</span>
+
+        <!-- Cat Couple Avatar Header -->
+        <div class="relative w-24 h-24 mx-auto mb-4 mt-1">
+          <div
+            class="w-full h-full rounded-full border-2 border-white/80 overflow-hidden bg-slate-800/80 p-2 flex items-center justify-center avatar-glow"
+          >
+            <!-- Cute Cat Couple SVG -->
+            <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-md">
+              <circle cx="38" cy="55" r="22" fill="#9CA3AF" />
+              <circle cx="62" cy="55" r="22" fill="#FFFFFF" />
+              <polygon points="22,40 18,22 34,30" fill="#9CA3AF" />
+              <polygon points="78,40 82,22 66,30" fill="#FFFFFF" />
+              <circle cx="32" cy="52" r="2.5" fill="#1F2937" />
+              <circle cx="42" cy="52" r="2.5" fill="#1F2937" />
+              <circle cx="58" cy="52" r="2.5" fill="#1F2937" />
+              <circle cx="68" cy="52" r="2.5" fill="#1F2937" />
+              <path d="M 46 25 Q 50 18 54 25 Q 50 32 46 25" fill="#F472B6" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Text Content Area -->
+        <div class="text-left w-full space-y-2 mt-2">
+          <!-- Loading Header Text -->
+          <div
+            id="loadingText"
+            class="text-xl font-bold text-white flex items-center space-x-1"
+          >
+            <!-- Dynamically typed/updated -->
+          </div>
+
+          <!-- Typing Content Text Paragraphs -->
+          <div
+            id="p1"
+            class="text-base font-semibold text-white/95 leading-snug min-h-[24px]"
+          ></div>
+          <div
+            id="p2"
+            class="text-base font-normal text-white/90 leading-snug min-h-[24px]"
+          ></div>
+          <div
+            id="p3"
+            class="text-base font-normal text-white/90 leading-snug min-h-[24px]"
+          ></div>
+          <div
+            id="p4"
+            class="text-base font-semibold text-white/95 leading-snug min-h-[28px] mt-3"
+          ></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Bottom TikTok Style Footer -->
+    <footer class="w-full max-w-sm z-10 pb-2 text-left px-2">
+      <p class="font-bold text-sm text-white drop-shadow">
+        berlin💖febri <span class="font-normal text-xs opacity-75">· 5-24</span>
+      </p>
+      <p class="text-xs text-white/90 drop-shadow mt-1">
+        Hitung yaa @1 🥳
+        <span class="opacity-75"
+          >#24mei2026 #ayonghati... <span class="font-bold">more</span></span
+        >
+      </p>
+      <p class="text-[10px] text-white/70 mt-1">See translation</p>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+      const music = document.getElementById("bgMusic");
+
+      // Fungsi khusus untuk memulai musik (dipanggil HANYA saat verifikasi berhasil)
+      function playAudio() {
+        if (music) {
+          music.play().catch((err) => {
+            console.log("Audio playback ditahan browser:", err);
+          });
+        }
+      }
+
+      // VERIFICATION LOGIC
+      const validNames = [
+        "berlin",
+        "febri",
+        "febri artika sari hia",
+        "ayong",
+        "ayong hati telaumbanua",
+      ];
+
+      function handleVerification(e) {
+        e.preventDefault();
+        const inputVal = document
+          .getElementById("nameInput")
+          .value.trim()
+          .toLowerCase();
+        const errorMsg = document.getElementById("errorMsg");
+
+        if (validNames.includes(inputVal)) {
+          errorMsg.classList.add("hidden");
+
+          // Memutar musik hanya jika verifikasi berhasil
+          playAudio();
+
+          const verifyModal = document.getElementById("verifyModal");
+          verifyModal.classList.add("opacity-0", "pointer-events-none");
+          setTimeout(() => {
+            verifyModal.style.display = "none";
+            startMainIntroSequence();
+          }, 500);
+        } else {
+          errorMsg.classList.remove("hidden");
+        }
+      }
+
+      // Typing Sequence Data
+      const text1 = "24 + 5 + 2026";
+      const text2 = "Hasilnya Berapa ya? 🤔";
+
+      const mathContainer = document.getElementById("mathText");
+      const questionContainer = document.getElementById("questionText");
+      const nextButton = document.getElementById("nextBtn");
+
+      // Typewriter implementation
+      function typeWriter(text, element, speed, callback) {
+        let i = 0;
+        element.classList.add("typing-cursor");
+
+        function type() {
+          if (i < text.length) {
+            element.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(type, speed);
+          } else {
+            element.classList.remove("typing-cursor");
+            if (callback) setTimeout(callback, 300);
+          }
+        }
+        type();
+      }
+
+      // Start Main Typing Sequence after successful verification
+      function startMainIntroSequence() {
+        typeWriter(text1, mathContainer, 120, () => {
+          typeWriter(text2, questionContainer, 70, () => {
+            nextButton.classList.remove("opacity-0", "pointer-events-none");
+            nextButton.classList.add("animate-pulse");
+          });
+        });
+      }
+
+      // Switch from Intro Card to Calculator Screen
+      function showCalculator() {
+        createHeartBurst();
+        const introCard = document.getElementById("introCard");
+        const calcCard = document.getElementById("calcCard");
+
+        introCard.classList.add("hidden");
+        calcCard.classList.remove("hidden");
+      }
+
+      /* CALCULATOR LOGIC */
+      let expression = "";
+      const displayEl = document.getElementById("calcDisplay");
+
+      function calcInput(val) {
+        if (
+          displayEl.innerText === "i love u ayong 💞" ||
+          displayEl.innerText === "Error"
+        ) {
+          expression = "";
+        }
+        expression += val;
+        displayEl.innerText = expression;
+      }
+
+      function calcClear() {
+        expression = "";
+        displayEl.innerText = "0";
+      }
+
+      function calcCalculate() {
+        // Clean expression for checking secret conditions
+        const cleaned = expression.replace(/\s+/g, "");
+
+        // Easter Egg Target Expressions
+        if (
+          cleaned === "7+2+1" ||
+          cleaned === "24+5+2025" ||
+          cleaned === "24+05+2025" ||
+          cleaned === "24+5+2026" ||
+          cleaned === "24+05+2026"
+        ) {
+          displayEl.innerText = "i love u ayong 💞";
+          expression = "";
+          triggerLoveEffects();
+
+          // Move to Loading and Message card after short delay
+          setTimeout(() => {
+            startSecretSequence();
+          }, 1200);
+          return;
+        }
+
+        // Standard Math Evaluation
+        try {
+          let evalExpr = expression.replace(/x/g, "*").replace(/%/g, "/100");
+          let result = eval(evalExpr);
+
+          if (result === undefined || isNaN(result)) {
+            displayEl.innerText = "Error";
+            expression = "";
+          } else {
+            if (Number.isInteger(result)) {
+              displayEl.innerText = result;
+            } else {
+              displayEl.innerText = parseFloat(result.toFixed(6));
+            }
+            expression = displayEl.innerText;
+          }
+        } catch (e) {
+          displayEl.innerText = "Error";
+          expression = "";
+        }
+      }
+
+      /* SECRET SEQUENCE: LOADING (10%-100%) -> TYPING MESSAGE */
+      function startSecretSequence() {
+        document.getElementById("calcCard").classList.add("hidden");
+        const resultCard = document.getElementById("resultCard");
+        resultCard.classList.remove("hidden");
+
+        const loadingText = document.getElementById("loadingText");
+        let percent = 10;
+
+        // Animate Loading from 10% to 100%
+        const loadingInterval = setInterval(() => {
+          percent += 10;
+          if (percent <= 100) {
+            loadingText.innerHTML = `I Love U ayong hatii ${percent}% 💞`;
+          } else {
+            clearInterval(loadingInterval);
+            // After 100%, start typing the rest of the message
+            setTimeout(typeFullMessage, 400);
+          }
+        }, 180);
+      }
+
+      function typeFullMessage() {
+        const p1 = document.getElementById("p1");
+        const p2 = document.getElementById("p2");
+        const p3 = document.getElementById("p3");
+        const p4 = document.getElementById("p4");
+
+        const textP1 = "Sekarang, Kamu Tau Ngga? 🤫";
+        const textP2 = "Sejauh ini pemeran utamanya adalah kamu 🤔";
+        const textP3 = "dan hingga detik ini";
+        const textP4 =
+          "yang aku mau tetaplah kamu. kamu dengan segala hal tentang dirimu yang selalu membuatku jatuh dan merindu. yang tidak aku temukan di dalam diri siapapun selain kamu🥰";
+
+        typeWriter(textP1, p1, 50, () => {
+          typeWriter(textP2, p2, 45, () => {
+            typeWriter(textP3, p3, 50, () => {
+              typeWriter(textP4, p4, 40, () => {
+                triggerLoveEffects();
+              });
+            });
+          });
+        });
+      }
+
+      // Heart Burst and Confetti Effect for Secret Match
+      function triggerLoveEffects() {
+        confetti({
+          particleCount: 150,
+          spread: 80,
+          origin: { y: 0.6 },
+          colors: ["#ff6584", "#f472b6", "#ffffff", "#fb7185"],
+        });
+        createHeartBurst();
+      }
+
+      // Floating Hearts Helper
+      function createHeartBurst() {
+        for (let i = 0; i < 10; i++) {
+          const heart = document.createElement("div");
+          heart.className = "floating-heart text-2xl";
+          heart.innerText = ["💖", "💕", "✨", "🌸", "💘"][
+            Math.floor(Math.random() * 5)
+          ];
+          heart.style.left = Math.random() * 80 + 10 + "vw";
+          heart.style.bottom = "10px";
+          heart.style.animationDuration = Math.random() * 2 + 2 + "s";
+          document.body.appendChild(heart);
+
+          setTimeout(() => heart.remove(), 4000);
+        }
+      }
+    </script>
+  </body>
+</html>
